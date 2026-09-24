@@ -66,3 +66,12 @@ cd client && npm run build
   [`server/research/ideas.yaml`](server/research/ideas.yaml); results go to `server/research/results/`.
 - **Paper 2** covers the full platform and a user study. Every agent run and check is logged to the
   database, and `GET /api/metrics` summarises it.
+
+## Deploy
+
+Free public deployment: the frontend on Vercel, the backend and database on Render.
+
+- `render.yaml`: Render Blueprint for the API and a free Postgres database (New, then Blueprint).
+- `client/vercel.json`: forwards `/api` to the Render service. Set the Vercel project's Root Directory to `client`.
+- The free Render instance cannot run a local model, so agents default to `fake` there. Use `api` with an
+  Anthropic key for real answers.

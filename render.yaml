@@ -1,0 +1,54 @@
+# Render Blueprint: the Athena API (FastAPI) and its PostgreSQL database, both on the free plan.
+# Render dashboard -> New -> Blueprint -> pick this repository. Values marked sync: false are asked for there.
+services:
+  - type: web
+    name: athena-api
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: server
+    buildCommand: pip install uv && uv sync --frozen --no-dev
+    startCommand: uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: APP_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: athena-db
+          property: connectionString
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: FRONTEND_URL
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: GITHUB_REDIRECT_URI
+        sync: false
+      - key: EMBEDDINGS_BACKEND
+        value: hash
+      # "fake" gives instant sample answers with no key. Switch to "api" and set ANTHROPIC_API_KEY
+      # and ANTHROPIC_MODEL for real answers. The free instance is too small to run a local model.
+      - key: AGENT_IDEA_PROVIDER
+        value: fake
+      - key: AGENT_STACK_PROVIDER
+        value: fake
+      - key: AGENT_CODE_PROVIDER
+        value: fake
+      - key: AGENT_SUMMARY_PROVIDER
+        value: fake
+      - key: AGENT_EVA_PROVIDER
+        value: fake
+      - key: AGENT_CHAT_PROVIDER
+        value: fake
+
+databases:
+  - name: athena-db
+    plan: free
+    region: singapore
+    databaseName: athena
+    user: athena

@@ -79,6 +79,15 @@ class Settings(BaseSettings):
     embeddings_model: str | None = None
     embedding_dim: int = 384
 
+    @field_validator("database_url")
+    @classmethod
+    def use_async_driver(cls, value: str) -> str:
+        # Hosts such as Render hand out plain postgres:// URLs; the app needs the asyncpg driver.
+        for prefix in ("postgres://", "postgresql://"):
+            if value.startswith(prefix):
+                return "postgresql+asyncpg://" + value[len(prefix) :]
+        return value
+
     @field_validator("cors_origins", mode="before")
     @classmethod
     def split_origins(cls, value: object) -> object:
