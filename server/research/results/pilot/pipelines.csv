@@ -1,0 +1,7 @@
+idea_id,mode,repeat,status,failed_stage,error,duration_s,llm_calls,input_tokens,output_tokens,retries,validation_errors,model,files,checks_run,checks_passed,all_code_checks_passed,spec_has_core_features,spec_has_target_users,stack_covers_layers,files_parse,python_lint,python_dependencies_declared,node_dependencies_declared,code_matches_stack,backend_detected,deploy_matches_stack,project_id,finished_at
+study-groups,strict,1,completed,,,728.1,3,2796,2513,0,0,qwen2.5-coder:7b,7,8,5,0,1,1,1,1,0,0,0,1,1,1,1409d1d1fd1842e191bc5f703556cc68,2026-09-23T19:56:53+00:00
+study-groups,naive,1,completed,,,860.2,3,2191,3059,0,0,qwen2.5-coder:7b,4,9,6,0,1,1,1,0,1,1,0,0,1,0,566a075f8052488eb8b1dd0f5cbb4a66,2026-09-23T20:11:13+00:00
+shopping-list,strict,1,completed,,,689.0,3,2998,2415,0,0,qwen2.5-coder:7b,7,8,5,0,1,1,1,0,1,0,0,1,1,1,1005b37080d640af9e7322b306f9b58c,2026-09-23T20:22:42+00:00
+habit-buddy,strict,1,completed,,,1036.7,3,4499,3955,1,1,qwen2.5-coder:7b,6,8,8,1,1,1,1,1,1,1,1,1,1,1,b34308f96766465689e4feeacfefa98a,2026-09-24T05:08:29+00:00
+habit-buddy,naive,1,completed,,,645.0,3,1963,2427,0,0,qwen2.5-coder:7b,4,8,6,0,1,1,1,0,1,,0,1,1,0,7c411adef23c464aa076a5bf3396bfa0,2026-09-24T05:19:14+00:00
+shopping-list,naive,1,completed,,,1468.3,3,1884,5552,0,0,qwen2.5-coder:7b,0,7,5,0,1,1,1,1,1,,,0,,,33b3640bb6654af6b78aaaf970c9a886,2026-09-24T05:45:13+00:00

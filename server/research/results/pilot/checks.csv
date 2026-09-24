@@ -1,0 +1,49 @@
+project_id,stage,check_name,passed,severity,message,duration_ms
+1005b37080d640af9e7322b306f9b58c,idea,spec_has_core_features,1,error,Spec lists core features,0
+1005b37080d640af9e7322b306f9b58c,idea,spec_has_target_users,1,error,Spec names 1 target user group(s),0
+1005b37080d640af9e7322b306f9b58c,stack,stack_covers_layers,1,warning,Stack covers frontend and backend,0
+1005b37080d640af9e7322b306f9b58c,code,files_parse,0,error,1 file(s) have syntax errors,20
+1005b37080d640af9e7322b306f9b58c,code,python_lint,1,warning,"4 lint problem(s), 0 blocking",5
+1005b37080d640af9e7322b306f9b58c,code,python_dependencies_declared,0,error,1 import(s) missing from requirements,2
+1005b37080d640af9e7322b306f9b58c,code,node_dependencies_declared,0,error,1 npm import(s) missing from package.json,0
+1005b37080d640af9e7322b306f9b58c,code,code_matches_stack,1,error,Code uses the chosen frameworks,1
+1409d1d1fd1842e191bc5f703556cc68,idea,spec_has_core_features,1,error,Spec lists core features,0
+1409d1d1fd1842e191bc5f703556cc68,idea,spec_has_target_users,1,error,Spec names 2 target user group(s),0
+1409d1d1fd1842e191bc5f703556cc68,stack,stack_covers_layers,1,warning,Stack covers frontend and backend,0
+1409d1d1fd1842e191bc5f703556cc68,code,files_parse,1,error,All files parse,3
+1409d1d1fd1842e191bc5f703556cc68,code,python_lint,0,error,"3 lint problem(s), 1 blocking",6
+1409d1d1fd1842e191bc5f703556cc68,code,python_dependencies_declared,0,error,2 import(s) missing from requirements,4
+1409d1d1fd1842e191bc5f703556cc68,code,node_dependencies_declared,0,error,3 npm import(s) missing from package.json,1
+1409d1d1fd1842e191bc5f703556cc68,code,code_matches_stack,1,error,Code uses the chosen frameworks,2
+33b3640bb6654af6b78aaaf970c9a886,idea,spec_has_core_features,1,error,Found 7 core feature(s) in the text,1
+33b3640bb6654af6b78aaaf970c9a886,idea,spec_has_target_users,1,error,Text names target users,1
+33b3640bb6654af6b78aaaf970c9a886,stack,stack_covers_layers,1,warning,Stack covers frontend and backend,0
+33b3640bb6654af6b78aaaf970c9a886,code,files_extracted,0,error,Extracted 0 file(s) from the free text,0
+33b3640bb6654af6b78aaaf970c9a886,code,files_parse,1,error,All files parse,0
+33b3640bb6654af6b78aaaf970c9a886,code,python_lint,1,info,No lint problems,0
+33b3640bb6654af6b78aaaf970c9a886,code,code_matches_stack,0,error,"No code found for chosen framework(s): ['express', 'react']",0
+566a075f8052488eb8b1dd0f5cbb4a66,idea,spec_has_core_features,1,error,Found 3 core feature(s) in the text,1
+566a075f8052488eb8b1dd0f5cbb4a66,idea,spec_has_target_users,1,error,Text names target users,1
+566a075f8052488eb8b1dd0f5cbb4a66,stack,stack_covers_layers,1,warning,Stack covers frontend and backend,0
+566a075f8052488eb8b1dd0f5cbb4a66,code,files_extracted,1,error,Extracted 4 file(s) from the free text,0
+566a075f8052488eb8b1dd0f5cbb4a66,code,files_parse,0,error,1 file(s) have syntax errors,6
+566a075f8052488eb8b1dd0f5cbb4a66,code,python_lint,1,warning,"2 lint problem(s), 0 blocking",11
+566a075f8052488eb8b1dd0f5cbb4a66,code,python_dependencies_declared,1,error,Every Python import is declared,4
+566a075f8052488eb8b1dd0f5cbb4a66,code,node_dependencies_declared,0,error,1 npm import(s) missing from package.json,0
+566a075f8052488eb8b1dd0f5cbb4a66,code,code_matches_stack,0,error,No code found for chosen framework(s): ['express'],0
+7c411adef23c464aa076a5bf3396bfa0,idea,spec_has_core_features,1,error,Found 7 core feature(s) in the text,0
+7c411adef23c464aa076a5bf3396bfa0,idea,spec_has_target_users,1,error,Text names target users,0
+7c411adef23c464aa076a5bf3396bfa0,stack,stack_covers_layers,1,warning,Stack covers frontend and backend,0
+7c411adef23c464aa076a5bf3396bfa0,code,files_extracted,1,error,Extracted 4 file(s) from the free text,0
+7c411adef23c464aa076a5bf3396bfa0,code,files_parse,0,error,2 file(s) have syntax errors,3
+7c411adef23c464aa076a5bf3396bfa0,code,python_lint,1,info,No lint problems,1
+7c411adef23c464aa076a5bf3396bfa0,code,node_dependencies_declared,0,error,4 npm import(s) missing from package.json,1
+7c411adef23c464aa076a5bf3396bfa0,code,code_matches_stack,1,error,Code uses the chosen frameworks,1
+b34308f96766465689e4feeacfefa98a,idea,spec_has_core_features,1,error,Spec lists core features,0
+b34308f96766465689e4feeacfefa98a,idea,spec_has_target_users,1,error,Spec names 4 target user group(s),0
+b34308f96766465689e4feeacfefa98a,stack,stack_covers_layers,1,warning,Stack covers frontend and backend,0
+b34308f96766465689e4feeacfefa98a,code,files_parse,1,error,All files parse,11
+b34308f96766465689e4feeacfefa98a,code,python_lint,1,info,No lint problems,6
+b34308f96766465689e4feeacfefa98a,code,python_dependencies_declared,1,error,Every Python import is declared,4
+b34308f96766465689e4feeacfefa98a,code,node_dependencies_declared,1,error,Every npm import is declared,1
+b34308f96766465689e4feeacfefa98a,code,code_matches_stack,1,error,Code uses the chosen frameworks,1

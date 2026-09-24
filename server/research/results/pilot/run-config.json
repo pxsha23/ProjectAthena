@@ -1,0 +1,10 @@
+{
+  "started_at": "2026-09-23T19:44:44+00:00",
+  "provider": "Ollama",
+  "model": "qwen2.5-coder:7b",
+  "num_ctx": 16384,
+  "max_retries": 2,
+  "refusal_fallback": "off",
+  "repeats": 1,
+  "git_commit": "eaa8ceb"
+}

@@ -1,0 +1,22 @@
+# PostgreSQL 17 with the pgvector extension, for local development.
+# Published on host port 5433 so it never clashes with a PostgreSQL already on 5432.
+# Start: docker compose up -d     Stop: docker compose down
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: athena
+      POSTGRES_PASSWORD: athena
+      POSTGRES_DB: athena
+    ports:
+      - "5433:5432"
+    volumes:
+      - athena-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U athena -d athena"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  athena-db:

@@ -1,0 +1,32 @@
+# Benchmark ideas for Paper 1 (strict schema handoffs vs naive free text).
+# Keep ids stable: results are keyed by id. Add new ideas at the end.
+- id: study-groups
+  name: StudySync
+  idea: An app where university students find study partners from the same course, see when everyone is free and book a room together.
+- id: shopping-list
+  name: Flat Shop
+  idea: A shared shopping list app for flatmates with a weekly budget and a record of who paid for what.
+- id: habit-buddy
+  name: Habit Buddy
+  idea: A habit tracker that pairs you with a friend for accountability and shows both of your streaks.
+- id: textbook-rental
+  name: Book Swap
+  idea: A marketplace where students rent out their used textbooks to other students for a semester.
+- id: fridge-recipes
+  name: Fridge Chef
+  idea: A recipe app that suggests meals from the ingredients you already have in your fridge.
+- id: volunteer-shifts
+  name: Shift Helper
+  idea: A volunteer shift planner for a local charity where volunteers sign up for shifts and get reminders.
+- id: lost-found
+  name: Campus Lost and Found
+  idea: A campus lost and found board where students post lost or found items with a photo and a location.
+- id: gym-log
+  name: GymLog
+  idea: A simple workout logger where users record sets and reps and see progress per exercise over time.
+- id: event-rsvp
+  name: Club Events
+  idea: An events page for university clubs where members see upcoming events and RSVP with one click.
+- id: bug-tracker
+  name: Tiny Tracker
+  idea: A minimal bug tracker for a small student team with issues, labels, assignees and a status board.

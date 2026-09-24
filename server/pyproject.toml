@@ -1,0 +1,59 @@
+[project]
+name = "athena-server"
+version = "0.1.0"
+description = "Athena backend: multi-agent pipeline from idea to deployed app."
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.118",
+  "uvicorn[standard]>=0.37",
+  "sqlalchemy[asyncio]>=2.0.36",
+  "asyncpg>=0.30",
+  "alembic>=1.14",
+  "pydantic>=2.9",
+  "pydantic-settings>=2.6",
+  "email-validator>=2.2",
+  "pyjwt>=2.10",
+  "bcrypt>=4.2",
+  "cryptography>=43",
+  "httpx>=0.28",
+  "anthropic>=1.0",
+  "jinja2>=3.1",
+  "pgvector>=0.3.6",
+  "pyyaml>=6.0",
+  "pyflakes>=3.2",
+]
+
+[project.optional-dependencies]
+# Real semantic code search. Pulls in PyTorch, so it is optional for development.
+embeddings = ["sentence-transformers>=3.3"]
+
+[dependency-groups]
+# Installed by default with `uv sync` / `uv run`.
+dev = [
+  "pytest>=8.3",
+  "pytest-asyncio>=0.24",
+  "aiosqlite>=0.20",
+  "ruff>=0.8",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_default_test_loop_scope = "session"
+testpaths = ["app/tests"]
+markers = ["integration: needs the Docker Postgres on port 5433 (skipped when it is not running)"]
+filterwarnings = ["ignore::DeprecationWarning:passlib.*"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
