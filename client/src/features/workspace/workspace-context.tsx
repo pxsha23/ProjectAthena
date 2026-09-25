@@ -223,6 +223,14 @@ export function WorkspaceProvider({ project, children }: { project: ProjectDetai
     void qc.invalidateQueries({ queryKey: keys.projects })
   }, [qc, id])
 
+  // When a stage finishes, reload everything. The WebSocket also triggers this, but when it cannot
+  // connect (some hosts do not proxy WebSockets) polling notices the stage ending and this catches it.
+  const previousRunning = useRef(runningStage)
+  useEffect(() => {
+    if (previousRunning.current && !runningStage) refreshAll()
+    previousRunning.current = runningStage
+  }, [runningStage, refreshAll])
+
   const addLine = useCallback((l: OutputLine) => setLiveLines((prev) => [...prev.slice(-200), l]), [])
 
   useProjectEvents(id, (event: ProgressEvent) => {
