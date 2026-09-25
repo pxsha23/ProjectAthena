@@ -2,7 +2,7 @@
 # Render dashboard -> New -> Blueprint -> pick this repository. Values marked sync: false are asked for there.
 services:
   - type: web
-    name: athena-api
+    name: projectathena
     runtime: python
     plan: free
     region: singapore
