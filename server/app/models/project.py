@@ -87,4 +87,9 @@ class ChatMessage(Base):
     role: Mapped[str] = mapped_column(String(10))  # "user" | "agent"
     agent: Mapped[str | None] = mapped_column(String(20))
     content: Mapped[str] = mapped_column(Text)
+    # A proposed change the student can apply: {"kind": "spec" | "stack", "changes": [...], "value": {...}}.
+    proposal: Mapped[dict[str, Any] | None] = mapped_column(JsonType)
+    proposal_status: Mapped[str | None] = mapped_column(String(10))  # pending | applied | dismissed
+    # Follow-up messages the agent suggests the student could send next.
+    suggestions: Mapped[list[str] | None] = mapped_column(JsonType)
     created_at: Mapped[datetime] = mapped_column(TZDateTime(), default=utcnow)

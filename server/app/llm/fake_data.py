@@ -228,8 +228,10 @@ SUMMARY: dict[str, Any] = {
 }
 
 CHAT: dict[str, Any] = {
-    "reply": "Good question. The session list is loaded in App.tsx when the page first appears.",
-    "suggestedActions": ["Open frontend/src/App.tsx"],
+    "reply": 'This is a sample answer: Athena is running without an AI model (the "fake" provider), '
+    "so every agent replies with fixed text. Set a real provider (groq, local or api) to get answers "
+    "about your project.",
+    "suggestedActions": [],
 }
 
 CANNED: dict[type, dict[str, Any]] = {

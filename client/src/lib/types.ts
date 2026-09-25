@@ -102,11 +102,24 @@ export interface ProjectFile {
   updatedAt: string
 }
 
+/** A spec or stack change an agent proposed in chat. Nothing changes until the student applies it. */
+export interface ChatProposal {
+  kind: 'spec' | 'stack'
+  changes: string[]
+  value: Record<string, unknown>
+}
+
+export type ProposalStatus = 'pending' | 'applied' | 'dismissed'
+
 export interface ChatMessage {
   id: string
   role: 'user' | 'agent'
   agentId: AgentId | null
   content: string
+  proposal?: ChatProposal | null
+  proposalStatus?: ProposalStatus | null
+  /** Follow-up messages the agent suggests the student could send next. */
+  suggestions?: string[] | null
   createdAt: string
 }
 

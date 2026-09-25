@@ -7,6 +7,10 @@ export function StackView() {
   const choices = project.stackPlan?.choices ?? []
   return (
     <StageShell stage="stack">
+      <p className="mb-5 rounded-lg border border-sky/30 bg-sky/5 p-4 text-sm text-muted">
+        This is the Tech Stack Agent&apos;s recommendation, not a final decision. Ask it in the chat why it chose
+        something, what an alternative would change, or tell it you want a different tool. You have the final say.
+      </p>
       <ul className="grid gap-3">
         {choices.map((choice) => (
           <li key={`${choice.layer}-${choice.name}`}>

@@ -67,6 +67,9 @@ STAGE_AGENT = {
 # Projects with a stage currently running (one at a time per project): project id -> stage.
 _running = RUNNING
 
+# What the student told the Tech Stack Agent in chat shapes the stack recommendation.
+STACK_NOTES_MAX_CHARS = 2000
+
 
 class StageError(Exception):
     """A stage cannot start (missing prerequisite or already running)."""
@@ -202,8 +205,9 @@ async def _run_idea(session: AsyncSession, project: Project) -> None:
 async def _run_stack(session: AsyncSession, project: Project) -> None:
     await hub.publish(project.id, "agent_started", agent="stack", stage="stack")
     spec = ProjectSpec.model_validate(project.spec)
+    notes = await stack_notes(session, project.id)
     outcome = await StackAgent().run(
-        session, StackAgentInput(spec=spec), project_id=project.id, stage="stack"
+        session, StackAgentInput(spec=spec, student_notes=notes), project_id=project.id, stage="stack"
     )
     project.stack = outcome.output.to_json_dict()
     await _agent_done(project.id, outcome.run)
@@ -215,6 +219,16 @@ async def _run_stack(session: AsyncSession, project: Project) -> None:
         check=lambda: checks.check_stack(outcome.output),
     )
     await _publish_checks(project.id, "stack", rows)
+
+
+async def stack_notes(session: AsyncSession, project_id: str) -> str:
+    """What the student has told the Tech Stack Agent in chat, oldest first."""
+    rows = await session.scalars(
+        select(ChatMessage.content)
+        .where(ChatMessage.project_id == project_id, ChatMessage.role == "user", ChatMessage.agent == "stack")
+        .order_by(ChatMessage.created_at)
+    )
+    return "\n".join(f"- {text}" for text in rows)[-STACK_NOTES_MAX_CHARS:]
 
 
 async def _run_code(session: AsyncSession, project: Project) -> None:

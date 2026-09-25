@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { AlertCircle, CheckCircle2, HelpCircle, Quote, RotateCw, Users } from 'lucide-react'
+import { AlertCircle, CheckCircle2, HelpCircle, Lightbulb, MessageSquare, Quote, RotateCw, Users } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -79,12 +79,21 @@ function SpecWriting() {
 }
 
 function SpecDocument() {
-  const { project } = useWorkspace()
+  const { project, sendMessage, typingAgent } = useWorkspace()
   const spec = project.spec
   if (!spec) return null
 
   return (
     <motion.article initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-8" aria-labelledby="spec-heading">
+      <aside className="flex gap-3 rounded-lg border border-pink/30 bg-pink/5 p-4 text-sm">
+        <Lightbulb className="mt-0.5 size-4 shrink-0 text-pink" aria-hidden="true" />
+        <p className="text-muted">
+          This is a first draft. Brainstorm it with the Idea Agent in the chat: ask what is missing, add or drop
+          features, change who it is for. The agent suggests, you decide, and the spec only changes when you apply a
+          proposal.
+        </p>
+      </aside>
+
       <h3 id="spec-heading" className="text-lg font-semibold">
         Spec
       </h3>
@@ -125,12 +134,20 @@ function SpecDocument() {
           <h4 className="flex items-center gap-2 text-sm font-semibold text-subtle uppercase">
             <HelpCircle className="size-4" aria-hidden="true" /> Open questions
           </h4>
-          <p className="mt-2 text-sm text-muted">Assumptions the Idea Agent made. Answer them in the chat.</p>
+          <p className="mt-2 text-sm text-muted">Assumptions the Idea Agent made. Pick one to talk it through in the chat.</p>
           <ul className="mt-3 space-y-2">
             {spec.openQuestions.map((question) => (
-              <li key={question} className="flex items-start gap-2.5 text-sm">
-                <span className="mt-2 size-1.5 shrink-0 rounded-full bg-pink" aria-hidden="true" />
-                {question}
+              <li key={question}>
+                <button
+                  type="button"
+                  disabled={typingAgent !== null}
+                  onClick={() => sendMessage(`Let's settle this open question: ${question}`, 'idea')}
+                  className="group flex w-full cursor-pointer items-start gap-2.5 rounded-md px-2 py-1.5 text-left text-sm transition-colors hover:bg-raised disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  <MessageSquare className="mt-0.5 size-4 shrink-0 text-pink" aria-hidden="true" />
+                  <span className="flex-1">{question}</span>
+                  <span className="text-xs text-subtle opacity-0 transition-opacity group-hover:opacity-100">Discuss</span>
+                </button>
               </li>
             ))}
           </ul>

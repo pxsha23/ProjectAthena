@@ -1,9 +1,13 @@
 import { motion } from 'framer-motion'
+import { Check, FileText, Layers, X } from 'lucide-react'
 import { AgentAvatar } from '@/components/agent-badge'
 import { Avatar } from '@/components/ui/avatar'
+import { Button } from '@/components/ui/button'
 import { AGENTS, agentClasses } from '@/lib/agents'
 import type { AgentId, ChatMessage } from '@/lib/types'
 import { cn, formatTime } from '@/lib/utils'
+import { useWorkspace } from '../workspace-context'
+import { ChatText } from './chat-text'
 
 interface ChatMessageItemProps {
   message: ChatMessage
@@ -37,10 +41,61 @@ export function ChatMessageItem({ message, userName }: ChatMessageItemProps) {
             isUser ? 'border-lavender/30 bg-lavender/10 text-text' : 'border-border bg-raised/50 text-text',
           )}
         >
-          {message.content}
+          {isUser ? message.content : <ChatText text={message.content} />}
         </div>
+        {message.proposal && <ProposalCard message={message} />}
       </div>
     </motion.li>
+  )
+}
+
+/** A spec or stack change the agent proposed. The student decides: apply it or dismiss it. */
+function ProposalCard({ message }: { message: ChatMessage }) {
+  const { resolveProposal, resolvingMessage, proposalError } = useWorkspace()
+  const proposal = message.proposal!
+  const status = message.proposalStatus ?? 'pending'
+  const busy = resolvingMessage === message.id
+  const isSpec = proposal.kind === 'spec'
+  const Icon = isSpec ? FileText : Layers
+  const c = agentClasses(isSpec ? 'idea' : 'stack')
+
+  return (
+    <div className={cn('w-full rounded-lg border bg-panel p-3 text-sm', c.border)}>
+      <p className={cn('flex items-center gap-1.5 text-xs font-semibold', c.text)}>
+        <Icon className="size-3.5" aria-hidden="true" />
+        {isSpec ? 'Proposed change to your spec' : 'Proposed tech stack'}
+      </p>
+      {proposal.changes.length > 0 && (
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-muted">
+          {proposal.changes.map((change, i) => (
+            <li key={i}>{change}</li>
+          ))}
+        </ul>
+      )}
+      {status === 'pending' ? (
+        <>
+          <div className="mt-3 flex gap-2">
+            <Button size="sm" onClick={() => resolveProposal(message.id, 'apply')} disabled={resolvingMessage !== null}>
+              <Check aria-hidden="true" /> {busy ? 'Applying…' : 'Apply'}
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => resolveProposal(message.id, 'dismiss')} disabled={resolvingMessage !== null}>
+              <X aria-hidden="true" /> Dismiss
+            </Button>
+          </div>
+          {proposalError && !resolvingMessage && (
+            <p role="alert" className="mt-2 text-xs text-red">
+              {proposalError}
+            </p>
+          )}
+          <p className="mt-2 text-[11px] text-subtle">Nothing changes until you apply it. You have the final say.</p>
+        </>
+      ) : (
+        <p className={cn('mt-2 flex items-center gap-1 text-xs', status === 'applied' ? 'text-green' : 'text-subtle')}>
+          {status === 'applied' ? <Check className="size-3.5" aria-hidden="true" /> : <X className="size-3.5" aria-hidden="true" />}
+          {status === 'applied' ? 'Applied' : 'Dismissed'}
+        </p>
+      )}
+    </div>
   )
 }
 

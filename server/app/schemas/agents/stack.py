@@ -10,6 +10,11 @@ StackLayer = Literal["frontend", "backend", "database", "auth", "hosting", "othe
 
 class StackAgentInput(StrictModel):
     spec: ProjectSpec
+    student_notes: str = Field(
+        default="",
+        description="What the student told the Tech Stack Agent: languages they know, what they want to "
+        "learn, time available, hosting. Empty if they have not said anything yet.",
+    )
 
 
 class StackChoice(StrictModel):

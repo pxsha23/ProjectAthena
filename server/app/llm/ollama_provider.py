@@ -63,8 +63,13 @@ class OllamaProvider:
             raise LLMUnavailableError(
                 f"Ollama returned {exc.response.status_code}: {exc.response.text}"
             ) from exc
+        except httpx.TimeoutException as exc:
+            raise LLMUnavailableError(
+                f"Ollama did not answer within {self._client.timeout.read} seconds; the model is too slow "
+                "for this request on this machine"
+            ) from exc
         except httpx.HTTPError as exc:
-            raise LLMUnavailableError(f"Could not reach Ollama: {exc}") from exc
+            raise LLMUnavailableError(f"Could not reach Ollama: {exc!r}") from exc
 
         data = response.json()
         content = (data.get("message") or {}).get("content", "")
@@ -109,8 +114,13 @@ class OllamaProvider:
             raise LLMUnavailableError(
                 f"Ollama returned {exc.response.status_code}: {exc.response.text}"
             ) from exc
+        except httpx.TimeoutException as exc:
+            raise LLMUnavailableError(
+                f"Ollama did not answer within {self._client.timeout.read} seconds; the model is too slow "
+                "for this request on this machine"
+            ) from exc
         except httpx.HTTPError as exc:
-            raise LLMUnavailableError(f"Could not reach Ollama: {exc}") from exc
+            raise LLMUnavailableError(f"Could not reach Ollama: {exc!r}") from exc
         data = response.json()
         if data.get("done_reason") == "length":
             raise LLMOutputError(

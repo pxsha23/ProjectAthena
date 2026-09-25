@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { Lock, Play } from 'lucide-react'
+import { Lock, MessageSquare, Play } from 'lucide-react'
 import { AgentAvatar } from '@/components/agent-badge'
 import { Button } from '@/components/ui/button'
 import { AGENTS, agentClasses, getStage } from '@/lib/agents'
@@ -17,7 +17,7 @@ const WORKING_STEPS: Record<StageId, string[]> = {
 
 /** Shown for stages the pipeline hasn't reached yet — or while an agent is working on it. */
 export function StageLocked({ stage }: { stage: StageId }) {
-  const { nextStage, runNextStage, runningStage, canAdvance } = useWorkspace()
+  const { nextStage, runNextStage, runningStage, canAdvance, sendMessage, typingAgent, messages } = useWorkspace()
   const meta = getStage(stage)
   const agent = AGENTS[meta.agentId]
   const c = agentClasses(meta.agentId)
@@ -59,6 +59,13 @@ export function StageLocked({ stage }: { stage: StageId }) {
               </motion.li>
             ))}
           </ol>
+        ) : isNext && canAdvance && stage === 'stack' ? (
+          <StackConsultation
+            talked={messages.some((m) => m.agentId === 'stack')}
+            busy={typingAgent !== null}
+            onTalk={() => sendMessage('Help me choose a stack. Ask me what you need to know.', 'stack')}
+            onRecommend={() => void runNextStage()}
+          />
         ) : isNext && canAdvance ? (
           <Button variant="ai" className="mt-6" onClick={() => void runNextStage()}>
             <Play aria-hidden="true" /> Run {agent.name}
@@ -68,6 +75,36 @@ export function StageLocked({ stage }: { stage: StageId }) {
             <Lock className="size-3.5" aria-hidden="true" /> Finish the earlier stages first
           </p>
         )}
+      </div>
+    </div>
+  )
+}
+
+interface StackConsultationProps {
+  talked: boolean
+  busy: boolean
+  onTalk: () => void
+  onRecommend: () => void
+}
+
+/** Like a doctor with a treatment plan: the agent learns about the student before recommending. */
+function StackConsultation({ talked, busy, onTalk, onRecommend }: StackConsultationProps) {
+  return (
+    <div className="mt-6 w-full space-y-4 text-left">
+      <p className="rounded-lg border border-sky/30 bg-sky/5 p-4 text-sm text-muted">
+        Every developer works with different tools. Tell the Tech Stack Agent about yourself in the chat: the languages
+        you know, what you want to learn and where you want to host. It recommends one plan built around you, explains
+        why, and you have the final say.
+      </p>
+      <div className="flex flex-wrap justify-center gap-2">
+        {!talked && (
+          <Button variant="secondary" onClick={onTalk} disabled={busy}>
+            <MessageSquare aria-hidden="true" /> Start the conversation
+          </Button>
+        )}
+        <Button variant="ai" onClick={onRecommend}>
+          <Play aria-hidden="true" /> {talked ? 'Recommend my stack' : 'Skip and recommend a stack'}
+        </Button>
       </div>
     </div>
   )

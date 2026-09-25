@@ -1,17 +1,13 @@
 """Projects, files and chat."""
 
-import json
 from typing import Annotated
 
 from fastapi import APIRouter, HTTPException, Path, Response, status
 from sqlalchemy import select
 
 from app.agents.base import AgentRunFailed
-from app.agents.chat import ChatAgent
 from app.api.deps import CurrentUser, DbSession, OwnedProject
 from app.models import ChatMessage, Project, ProjectFile
-from app.schemas.agents import ChatAgentInput
-from app.schemas.agents.chat import ChatTurn
 from app.schemas.api import (
     ChatIn,
     FileOut,
@@ -22,7 +18,7 @@ from app.schemas.api import (
     ProjectOut,
     ProjectUpdate,
 )
-from app.services import embeddings
+from app.services import chat, embeddings
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 
@@ -42,6 +38,7 @@ EXTENSION_LANGUAGE = {
 }
 
 FilePath = Annotated[str, Path(min_length=1, max_length=500)]
+IdParam = Annotated[str, Path(min_length=1, max_length=64)]
 
 
 def _language_for(path: str) -> str:
@@ -167,39 +164,38 @@ async def list_messages(project: OwnedProject, db: DbSession) -> list[ChatMessag
 
 @router.post("/{project_id}/messages", response_model=list[MessageOut], status_code=status.HTTP_201_CREATED)
 async def send_message(body: ChatIn, project: OwnedProject, db: DbSession) -> list[ChatMessage]:
-    """Stores the user's message, asks the chosen agent, and returns both messages."""
-    history = list(
-        await db.scalars(
-            select(ChatMessage)
-            .where(ChatMessage.project_id == project.id)
-            .order_by(ChatMessage.created_at.desc())
-            .limit(10)
-        )
-    )[::-1]
-    question = ChatMessage(project_id=project.id, role="user", content=body.content)
-    db.add(question)
-    await db.commit()
-
-    files = await db.scalars(select(ProjectFile.path).where(ProjectFile.project_id == project.id))
-    context = {"spec": project.spec, "stack": project.stack, "files": list(files), "eva": project.eva}
-    agent_input = ChatAgentInput(
-        agent=body.agent_id,
-        question=body.content,
-        project_name=project.name,
-        stage=project.stage,
-        context=json.dumps(context, ensure_ascii=False),
-        history=[ChatTurn(role=m.role, content=m.content) for m in history],  # type: ignore[arg-type]
-    )
+    """Stores the student's message, asks the chosen agent, and returns both messages."""
     try:
-        outcome = await ChatAgent().run(db, agent_input, project_id=project.id, stage=project.stage)
+        return await chat.reply(db, project, body.agent_id, body.content)
     except AgentRunFailed as exc:
         raise HTTPException(
             status.HTTP_502_BAD_GATEWAY, detail=f"The agent could not answer: {exc.message}"
         ) from exc
 
-    reply = ChatMessage(
-        project_id=project.id, role="agent", agent=body.agent_id, content=outcome.output.reply
-    )
-    db.add(reply)
-    await db.commit()
-    return [question, reply]
+
+async def _owned_message(db: DbSession, project: Project, message_id: str) -> ChatMessage:
+    message = await db.get(ChatMessage, message_id)
+    if message is None or message.project_id != project.id:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Message not found")
+    return message
+
+
+@router.post("/{project_id}/messages/{message_id}/apply", response_model=MessageOut)
+async def apply_proposal(project: OwnedProject, db: DbSession, message_id: IdParam) -> ChatMessage:
+    """Applies the spec or stack change an agent proposed in this message."""
+    message = await _owned_message(db, project, message_id)
+    try:
+        await chat.apply_proposal(db, project, message)
+    except chat.ProposalError as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    return message
+
+
+@router.post("/{project_id}/messages/{message_id}/dismiss", response_model=MessageOut)
+async def dismiss_proposal(project: OwnedProject, db: DbSession, message_id: IdParam) -> ChatMessage:
+    message = await _owned_message(db, project, message_id)
+    try:
+        await chat.dismiss_proposal(db, message)
+    except chat.ProposalError as exc:
+        raise HTTPException(status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+    return message

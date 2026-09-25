@@ -133,3 +133,11 @@ def test_factory_requires_a_model_name(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(settings, "agent_idea_model", None)
     monkeypatch.setattr(settings, "ollama_model", "qwen-from-env")
     assert get_provider("idea").model == "qwen-from-env"
+
+
+async def test_ollama_timeout_is_explained() -> None:
+    def slow(request: httpx.Request) -> httpx.Response:
+        raise httpx.ReadTimeout("timed out", request=request)
+
+    with pytest.raises(LLMUnavailableError, match="did not answer within"):
+        await ollama_with(slow).generate(system="s", prompt="p", schema=ProjectSpec)

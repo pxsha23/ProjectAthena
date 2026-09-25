@@ -55,6 +55,8 @@ export const api = {
         method: 'POST',
         json: { content, agentId },
       }),
+    resolveProposal: (projectId: string, messageId: string, action: 'apply' | 'dismiss') =>
+      request<ChatMessage>(`/projects/${enc(projectId)}/messages/${enc(messageId)}/${action}`, { method: 'POST' }),
   },
 
   pipeline: {

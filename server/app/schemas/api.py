@@ -85,11 +85,20 @@ class FileWrite(ApiModel):
     language: str | None = None
 
 
+class ProposalOut(ApiModel):
+    kind: Literal["spec", "stack"]
+    changes: list[str]
+    value: dict[str, Any]
+
+
 class MessageOut(ApiModel):
     id: str
     role: str
     agent_id: str | None = Field(default=None, validation_alias="agent")
     content: str
+    proposal: ProposalOut | None = None
+    proposal_status: Literal["pending", "applied", "dismissed"] | None = None
+    suggestions: list[str] | None = None
     created_at: datetime
 
 

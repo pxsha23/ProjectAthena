@@ -23,6 +23,7 @@ import {
   useRunStage,
   useRunsQuery,
   useSaveFile,
+  useResolveProposal,
   useSendMessage,
 } from '@/lib/api/queries'
 import { STAGES, stageIndex } from '@/lib/agents'
@@ -113,6 +114,11 @@ interface WorkspaceContextValue {
   typingAgent: AgentId | null
   sendMessage: (content: string, agentId: AgentId) => void
   chatError: string | null
+  /** Apply or dismiss a spec or stack change an agent proposed. */
+  resolveProposal: (messageId: string, action: 'apply' | 'dismiss') => void
+  /** The message whose proposal is being applied or dismissed right now. */
+  resolvingMessage: string | null
+  proposalError: string | null
 
   /* EVA, checks, output */
   evaRunning: boolean
@@ -168,6 +174,7 @@ export function WorkspaceProvider({ project, children }: { project: ProjectDetai
   const runStage = useRunStage(id)
   const saveMutation = useSaveFile(id)
   const sendMutation = useSendMessage(id)
+  const proposalMutation = useResolveProposal(id)
 
   const files = useMemo(() => filesQuery.data ?? [], [filesQuery.data])
   const fileIndex = useMemo(() => new Map(files.map((f) => [f.path, f])), [files])
@@ -387,6 +394,14 @@ export function WorkspaceProvider({ project, children }: { project: ProjectDetai
     [sendMutation],
   )
 
+  const resolveProposal = useCallback(
+    (messageId: string, action: 'apply' | 'dismiss') => {
+      if (proposalMutation.isPending) return
+      proposalMutation.mutate({ messageId, action })
+    },
+    [proposalMutation],
+  )
+
   const value: WorkspaceContextValue = {
     project,
     view,
@@ -422,6 +437,9 @@ export function WorkspaceProvider({ project, children }: { project: ProjectDetai
     typingAgent: sendMutation.isPending ? (sendMutation.variables?.agentId ?? null) : null,
     sendMessage,
     chatError: sendMutation.error?.message ?? null,
+    resolveProposal,
+    resolvingMessage: proposalMutation.isPending ? (proposalMutation.variables?.messageId ?? null) : null,
+    proposalError: proposalMutation.error?.message ?? null,
     evaRunning: runningStage === 'eva',
     runEva,
     runs,

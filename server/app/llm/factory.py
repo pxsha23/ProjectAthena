@@ -4,6 +4,7 @@ from app.core.config import AgentName, get_settings
 from app.llm.anthropic_provider import AnthropicProvider
 from app.llm.base import LLMProvider, LLMUnavailableError
 from app.llm.fake_provider import FakeProvider
+from app.llm.groq_provider import GroqProvider
 from app.llm.ollama_provider import OllamaProvider
 
 # Tests swap providers in here instead of patching settings.
@@ -55,6 +56,23 @@ def get_provider(agent: AgentName) -> LLMProvider:
                 refusal_fallback=settings.anthropic_refusal_fallback,
             )
         return _cache[("api", model)]
+
+    if kind == "groq":
+        model = override_model or settings.groq_model
+        if not model:
+            raise LLMUnavailableError(
+                f"No model configured for the {agent} agent: set GROQ_MODEL or AGENT_{agent.upper()}_MODEL"
+            )
+        if ("groq", model) not in _cache:
+            _cache[("groq", model)] = GroqProvider(
+                model,
+                api_key=settings.groq_api_key,
+                base_url=settings.groq_base_url,
+                timeout=settings.groq_timeout_seconds,
+                max_tokens=settings.groq_max_tokens,
+                reasoning_effort=settings.groq_reasoning_effort,
+            )
+        return _cache[("groq", model)]
 
     model = override_model or settings.ollama_model
     if not model:

@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
-ProviderName = Literal["api", "local", "fake"]
+ProviderName = Literal["api", "local", "groq", "fake"]
 AgentName = Literal["idea", "stack", "code", "summary", "eva", "chat"]
 
 
@@ -55,7 +55,18 @@ class Settings(BaseSettings):
     # How long Ollama keeps the model in memory between calls.
     ollama_keep_alive: str = "30m"
 
-    # --- Per-agent provider selection ("api" = Anthropic, "local" = Ollama, "fake" = canned test data) ---
+    # --- LLM: Groq ("groq"): hosted open models with a free tier ---
+    groq_api_key: str | None = None
+    groq_model: str | None = None
+    groq_base_url: str = "https://api.groq.com/openai/v1"
+    groq_timeout_seconds: float = 120.0
+    # Answer limit. The free tier also caps tokens per minute, so keep this modest.
+    groq_max_tokens: int = 6000
+    # Reasoning models only (gpt-oss): "low" keeps hidden reasoning tokens, and so rate-limit use, small.
+    groq_reasoning_effort: str | None = "low"
+
+    # --- Per-agent provider selection ---
+    # "api" = Anthropic, "local" = Ollama, "groq" = Groq, "fake" = canned test data.
     agent_idea_provider: ProviderName = "api"
     agent_stack_provider: ProviderName = "api"
     agent_code_provider: ProviderName = "api"
@@ -63,7 +74,7 @@ class Settings(BaseSettings):
     agent_eva_provider: ProviderName = "api"
     agent_chat_provider: ProviderName = "api"
 
-    # Optional per-agent model overrides. Empty means use ANTHROPIC_MODEL / OLLAMA_MODEL.
+    # Optional per-agent model overrides. Empty means use ANTHROPIC_MODEL / OLLAMA_MODEL / GROQ_MODEL.
     agent_idea_model: str | None = None
     agent_stack_model: str | None = None
     agent_code_model: str | None = None

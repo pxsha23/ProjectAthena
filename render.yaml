@@ -31,8 +31,9 @@ services:
         sync: false
       - key: EMBEDDINGS_BACKEND
         value: hash
-      # "fake" gives instant sample answers with no key. Switch to "api" and set ANTHROPIC_API_KEY
-      # and ANTHROPIC_MODEL for real answers. The free instance is too small to run a local model.
+      # "fake" gives instant sample answers with no key. For real answers switch every provider to "groq"
+      # and set GROQ_API_KEY (free at console.groq.com) and GROQ_MODEL (for example openai/gpt-oss-120b).
+      # The free instance is too small to run a local model.
       - key: AGENT_IDEA_PROVIDER
         value: fake
       - key: AGENT_STACK_PROVIDER

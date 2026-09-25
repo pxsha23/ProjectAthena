@@ -1,6 +1,6 @@
 """Strict input/output schemas for every agent. Agents never exchange free text."""
 
-from app.schemas.agents.chat import ChatAgentInput, ChatAgentOutput
+from app.schemas.agents.chat import ChatAgentInput, ChatAgentOutput, ChatTurn, CodeSnippet
 from app.schemas.agents.code import CodeAgentInput, CodeBundle, DependencyManifest, GeneratedFile
 from app.schemas.agents.deploy import DeployAgentInput, DeploymentBundle, DeploymentTarget, StackDetection
 from app.schemas.agents.eva import EvaAgentInput, EvaFinding, EvaPersona, EvaReport
@@ -18,6 +18,8 @@ from app.schemas.agents.summary import (
 __all__ = [
     "ChatAgentInput",
     "ChatAgentOutput",
+    "ChatTurn",
+    "CodeSnippet",
     "CodeAgentInput",
     "CodeBundle",
     "DependencyManifest",

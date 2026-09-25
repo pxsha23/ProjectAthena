@@ -125,19 +125,32 @@ export function useSaveFile(projectId: string) {
   })
 }
 
+export function useResolveProposal(projectId: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ messageId, action }: { messageId: string; action: 'apply' | 'dismiss' }) =>
+      api.chat.resolveProposal(projectId, messageId, action),
+    onSettled: () => {
+      for (const key of [keys.messages(projectId), keys.project(projectId), keys.checks(projectId), keys.projects]) {
+        void qc.invalidateQueries({ queryKey: key })
+      }
+    },
+  })
+}
+
 export function useSendMessage(projectId: string) {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: ({ content, agentId }: { content: string; agentId: AgentId }) =>
       api.chat.send(projectId, content, agentId),
     // Show the user's message immediately while the agent thinks.
-    onMutate: async ({ content }) => {
+    onMutate: async ({ content, agentId }) => {
       await qc.cancelQueries({ queryKey: keys.messages(projectId) })
       const previous = qc.getQueryData<ChatMessage[]>(keys.messages(projectId))
       const pending: ChatMessage = {
         id: `pending-${Date.now()}`,
         role: 'user',
-        agentId: null,
+        agentId,
         content,
         createdAt: new Date().toISOString(),
       }

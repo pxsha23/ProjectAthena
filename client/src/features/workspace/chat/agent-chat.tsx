@@ -16,6 +16,15 @@ import { cn } from '@/lib/utils'
 import { useWorkspace } from '../workspace-context'
 import { ChatMessageItem, TypingIndicator } from './chat-message'
 
+/** First messages a student can send to each agent, shown until they start talking to it. */
+const STARTERS: Record<AgentId, string[]> = {
+  idea: ['What features am I missing?', 'Who else could use this app?', 'Is this too big for a first version?'],
+  stack: ['Help me choose a stack. Ask me what you need to know.', 'I only know Python. What would suit me?'],
+  code: ['Walk me through how the code fits together', 'Where does the app store its data?', 'What should I read first?'],
+  deploy: ['Where can I deploy this for free?', 'What environment variables will I need?', 'What if I switch the database?'],
+  eva: ['What is the most serious problem you found?', 'How do I fix the failing findings?', 'Help me write my own test scenario'],
+}
+
 export function AgentChat() {
   const { messages, typingAgent, sendMessage, view, chatError } = useWorkspace()
   const { user } = useAuth()
@@ -25,6 +34,16 @@ export function AgentChat() {
   const agentId = pickedAgent ?? getStage(view).agentId
   const c = agentClasses(agentId)
   const listRef = useRef<HTMLOListElement>(null)
+
+  // Chips above the input: the latest reply's follow-ups, or starters before the first conversation.
+  const last = messages[messages.length - 1]
+  const talkedTo = messages.some((m) => m.agentId === agentId)
+  const chips =
+    last?.role === 'agent' && last.agentId === agentId && last.suggestions?.length
+      ? last.suggestions
+      : talkedTo
+        ? []
+        : STARTERS[agentId]
 
   useEffect(() => {
     const list = listRef.current
@@ -57,6 +76,24 @@ export function AgentChat() {
       </ol>
 
       <form onSubmit={submit} className="shrink-0 border-t border-border p-3">
+        {chips.length > 0 && !typingAgent && (
+          <ul className="mb-2 flex flex-wrap gap-1.5" aria-label="Suggested messages">
+            {chips.map((chip) => (
+              <li key={chip}>
+                <button
+                  type="button"
+                  onClick={() => sendMessage(chip, agentId)}
+                  className={cn(
+                    'cursor-pointer rounded-full border bg-raised px-2.5 py-1 text-left text-xs text-muted transition-colors hover:text-text',
+                    c.border,
+                  )}
+                >
+                  {chip}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
         {chatError && (
           <p role="alert" className="mb-2 rounded-md border border-red/30 bg-red/10 px-2.5 py-1.5 text-xs text-red">
             {chatError}
