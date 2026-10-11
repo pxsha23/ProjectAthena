@@ -83,6 +83,18 @@ class TrainConfig:
 
 
 @dataclass
+class BenchmarksConfig:
+    raw_dir: str = "data/raw/benchmarks"
+    processed_dir: str = "data/processed/benchmarks"
+    # NLBSE has no official dev split: one is cut from the official train split with this seed.
+    nlbse_dev_fraction: float = 0.1
+    # The official NLBSE train file has about 720k issues; it is sampled down to this many before the
+    # dev split is cut. The official test split always stays complete.
+    nlbse_train_max: int | None = 200000
+    seed: int = 0
+
+
+@dataclass
 class DecisionConfig:
     use_temperature_scaling: bool = True
     use_conformal: bool = True
@@ -109,6 +121,7 @@ class AdvisorConfig:
     loss: LossConfig = field(default_factory=LossConfig)
     train: TrainConfig = field(default_factory=TrainConfig)
     decision: DecisionConfig = field(default_factory=DecisionConfig)
+    benchmarks: BenchmarksConfig = field(default_factory=BenchmarksConfig)
 
     def to_dict(self) -> dict[str, Any]:
         return dataclasses.asdict(self)

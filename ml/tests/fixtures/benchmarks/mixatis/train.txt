@@ -1,0 +1,30 @@
+show B-object
+me O
+morning B-period_of_day
+flights O
+to O
+boston B-toloc.city_name
+and O
+the O
+cheapest B-cost_relative
+fare O
+atis_flight#atis_airfare
+
+which O
+airline O
+flies O
+out O
+of O
+dallas B-fromloc.city_name
+atis_airline
+
+list O
+ground O
+transport O
+in O
+denver B-city_name
+and O
+the O
+airport O
+code O
+atis_ground_service#atis_airport#atis_abbreviation

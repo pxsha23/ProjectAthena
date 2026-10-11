@@ -1,0 +1,66 @@
+{
+  "train": [
+    [
+      "move fifty dollars from savings into my checking account",
+      "transfer"
+    ],
+    [
+      "how much money is sitting in my checking account",
+      "balance"
+    ],
+    [
+      "set a countdown for twelve minutes",
+      "timer"
+    ],
+    [
+      "will i need an umbrella in leeds this afternoon",
+      "weather"
+    ]
+  ],
+  "val": [
+    [
+      "send twenty pounds over to my joint account",
+      "transfer"
+    ],
+    [
+      "start a five minute timer please",
+      "timer"
+    ]
+  ],
+  "test": [
+    [
+      "what is left in my savings right now",
+      "balance"
+    ],
+    [
+      "is it going to snow on saturday",
+      "weather"
+    ],
+    [
+      "shift a hundred dollars into the holiday fund",
+      "transfer"
+    ]
+  ],
+  "oos_train": [
+    [
+      "who painted the ceiling of the old chapel",
+      "oos"
+    ]
+  ],
+  "oos_val": [
+    [
+      "how many moons does the largest planet have",
+      "oos"
+    ]
+  ],
+  "oos_test": [
+    [
+      "what is the best way to fold a paper crane",
+      "oos"
+    ],
+    [
+      "recommend a board game for six players",
+      "oos"
+    ]
+  ]
+}

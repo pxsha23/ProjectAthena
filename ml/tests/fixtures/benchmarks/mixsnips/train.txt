@@ -1,0 +1,17 @@
+play O
+some O
+jazz B-music_item
+and O
+will O
+it O
+rain B-condition_description
+tomorrow B-timeRange
+PlayMusic#GetWeather
+
+rate O
+this O
+novel B-object_type
+four B-rating_value
+stars B-rating_unit
+RateBook
+

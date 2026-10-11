@@ -1,0 +1,5 @@
+,issue_url,issue_label,issue_created_at,issue_author_association,repository_url,issue_title,issue_body
+0,https://github.com/example/photo-sorter/issues/1,bug,2020-05-01T07:00:00Z,NONE,https://github.com/example/photo-sorter,Photos sorted by the wrong date,"Photos taken after midnight are filed under the previous day."
+1,https://github.com/example/photo-sorter/issues/2,enhancement,2020-05-02T07:00:00Z,NONE,https://github.com/example/photo-sorter,Group photos by location,It would help to sort photos into folders by the city they were taken in.
+2,https://github.com/example/photo-sorter/issues/3,question,2020-05-03T07:00:00Z,NONE,https://github.com/example/photo-sorter,Does it work with RAW files?,"I shoot in RAW, does the sorter read those, or only JPEG?"
+3,https://github.com/example/photo-sorter/issues/4,bug,2020-05-04T07:00:00Z,COLLABORATOR,https://github.com/example/photo-sorter,Duplicate detection misses rotated photos,A photo and its rotated copy are both kept.

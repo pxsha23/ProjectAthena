@@ -58,3 +58,11 @@ decision:
   max_team_size: 4
   lambdas: {learner: 0.2, builder: 0.5, fast: 1.0}
   default_costs: {blueprint: 1.0, code: 2.0, checker: 0.2, deploy: 1.0, eva: 1.5}
+
+benchmarks:
+  raw_dir: data/raw/benchmarks
+  processed_dir: data/processed/benchmarks
+  # NLBSE has no official dev split: it is cut from the (sampled) official train split.
+  nlbse_dev_fraction: 0.1
+  nlbse_train_max: 200000
+  seed: 0

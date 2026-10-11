@@ -47,3 +47,7 @@ target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+# Citations, licence wording and URLs are recorded verbatim, so their lines are not wrapped.
+"src/athena_advisor/data/benchmarks/sources.py" = ["E501"]

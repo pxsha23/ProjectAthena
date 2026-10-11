@@ -1,0 +1,20 @@
+how O
+far O
+is O
+the O
+airport O
+from O
+atlanta B-city_name
+and O
+what O
+planes O
+land O
+there O
+atis_distance#atis_aircraft
+
+capacity O
+of O
+the O
+smallest O
+jet B-aircraft_code
+atis_capacity

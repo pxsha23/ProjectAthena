@@ -49,6 +49,9 @@ python -m uv run ruff format .             # format
 # Build the dataset from the tiny fixtures (writes data/processed/fixture, including DATA_CARD.md)
 python -m uv run python scripts/build_stacksample.py --fixture
 
+# Convert the benchmark fixtures (writes data/processed/benchmarks_fixture, one DATA_CARD.md per dataset)
+python -m uv run python scripts/download_benchmarks.py --fixture
+
 # Show the fully resolved config for an experiment, with optional dotted overrides
 python -m uv run python scripts/show_config.py configs/experiments/smoke.yaml
 python -m uv run python scripts/show_config.py configs/experiments/ablation_no_film.yaml --set train.epochs=1
@@ -71,6 +74,21 @@ python scripts/build_stacksample.py --raw-dir /kaggle/input/stacksample --out da
 | `data_card.py` | `DATA_CARD.md`: source, licence wording, filters, counts per split, specialist and lead, co-occurrence, context feature rates and the full tag map. |
 
 The same input and config always give byte-identical parquet files (rows are sorted by date, then id).
+
+## Public benchmarks (`src/athena_advisor/data/benchmarks/`)
+
+On Kaggle (internet on), download and convert all four with `python scripts/download_benchmarks.py`
+(`--only clinc150 nlbse` for a subset). Each dataset becomes `train.parquet`, `dev.parquet` and `test.parquet`
+in one common format (`id`, `text`, `labels`, `lead`, `out_of_scope`, `split`), each with a `.sha256` file,
+plus `info.json` and a `DATA_CARD.md` with the exact source, version, licence and citation.
+
+| Dataset | Source (pinned) | Splits | Notes |
+| --- | --- | --- | --- |
+| MixATIS, MixSNIPS | AGIF repository, commit `6a4b26b`, `data/Mix*_clean/` | official train, dev, test | Intents only, split on `#`; no lead for multi-intent rows |
+| CLINC150 | `clinc/oos-eval`, commit `828f809`, `data/data_full.json` | official train, val (as dev), test | Out-of-scope rows: `out_of_scope = true`, no labels |
+| NLBSE'22 | Ticket Tagger storage, `github-labels-top3-803k-*.tar.gz` | official train and test; dev cut from train | Train sampled to `benchmarks.nlbse_train_max` (seed 0); test complete |
+
+Source lookups (URLs, licences, citations) live in `sources.py` and were checked against the official pages.
 
 ## Configs
 

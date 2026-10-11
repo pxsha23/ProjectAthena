@@ -1,0 +1,15 @@
+,issue_url,issue_label,issue_created_at,issue_author_association,repository_url,issue_title,issue_body
+0,https://github.com/example/notes-app/issues/1,bug,2019-01-04T10:00:00Z,NONE,https://github.com/example/notes-app,Saving a note twice duplicates it,"Steps:
+1. Create a note
+2. Press save twice
+
+The note shows up two times in the list."
+1,https://github.com/example/notes-app/issues/2,enhancement,2019-01-05T11:00:00Z,CONTRIBUTOR,https://github.com/example/notes-app,Add dark mode,"It would be nice to have a dark theme, especially at night."
+2,https://github.com/example/notes-app/issues/3,question,2019-01-06T12:00:00Z,NONE,https://github.com/example/notes-app,How do I export notes?,Is there a way to export all notes as plain text files?
+3,https://github.com/example/weather-cli/issues/1,bug,2019-02-01T09:30:00Z,MEMBER,https://github.com/example/weather-cli,Crash when the city name has an accent,"Running the tool with a city like Malmo, spelled with an accent, raises an encoding error."
+4,https://github.com/example/weather-cli/issues/2,enhancement,2019-02-02T09:30:00Z,NONE,https://github.com/example/weather-cli,Support Fahrenheit output,Please add a flag that prints temperatures in Fahrenheit.
+5,https://github.com/example/weather-cli/issues/3,bug,2019-02-03T09:30:00Z,NONE,https://github.com/example/weather-cli,Wrong wind direction,The wind direction is shown as north when the forecast says south.
+6,https://github.com/example/weather-cli/issues/4,question,2019-02-04T09:30:00Z,NONE,https://github.com/example/weather-cli,Which API key do I need?,
+7,https://github.com/example/game-engine/issues/1,enhancement,2019-03-10T08:00:00Z,OWNER,https://github.com/example/game-engine,Gamepad vibration,"Add rumble support for gamepads, at least on desktop."
+8,https://github.com/example/game-engine/issues/2,bug,2019-03-11T08:00:00Z,NONE,https://github.com/example/game-engine,Sprites flicker on resize,"When the window is resized, every sprite flickers for one frame."
+9,https://github.com/example/game-engine/issues/3,enhancement,2019-03-12T08:00:00Z,NONE,https://github.com/example/game-engine,Export levels as JSON,A JSON export would make it easier to build external level editors.
