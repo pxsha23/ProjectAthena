@@ -26,15 +26,31 @@ load the exported ONNX model.
 | `smoke` config only, if anything trains at all | Full training: every condition, 5 seeds |
 | Never loads the full dataset | Writes `results/` JSON files and the exported ONNX model |
 
-On Kaggle, clone the repo, then inside `ml/`:
-
-```bash
-pip install -e . --no-deps        # Kaggle already has a GPU build of PyTorch; keep it
-pip install setfit optimum        # anything Kaggle is missing
-export ATHENA_ML_ROOT=$(pwd)      # so relative paths in configs resolve to this folder
-```
-
 Copy the `results/` files back into the repo and commit them.
+
+## How to run on Kaggle
+
+The notebooks in `notebooks/` only call the scripts; all logic is in the package.
+
+**Prepare the data** with `notebooks/01_prepare_data.ipynb`:
+
+1. On kaggle.com, create a notebook and import `notebooks/01_prepare_data.ipynb` (File, then Import Notebook).
+2. In the right-hand panel: turn **Internet** on, and under **Input** add the dataset `stackoverflow/stacksample`.
+   No accelerator is needed for this notebook.
+3. If the GitHub repository is private, add a secret named `GITHUB_TOKEN` (Add-ons, then Secrets) with read
+   access to it. The notebook removes the token from the saved git remote and never prints it.
+4. Run all cells. The notebook:
+   - prints the Python version and GPU,
+   - clones the repository and installs the package with `pip install -e ml --no-deps` (Kaggle's GPU build
+     of PyTorch stays in place), plus `setfit optimum onnx onnxruntime`,
+   - sets `ATHENA_ML_ROOT` and runs `scripts/check_environment.py`,
+   - builds StackSample with `scripts/build_stacksample.py --input-root /kaggle/input` (it finds the
+     attached files on its own),
+   - downloads and converts the benchmarks with `scripts/download_benchmarks.py`,
+   - prints the counts (`scripts/summarize_data.py`) and every data card,
+   - writes `/kaggle/working/athena_data.zip` with `data/processed/` inside.
+5. Download the zip from the Output panel, or attach this notebook's output to the training notebook.
+   Unzip it inside `ml/` to get the same layout.
 
 ## Commands (laptop, Windows)
 

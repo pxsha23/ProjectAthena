@@ -8,3 +8,6 @@ data/processed/
 *.onnx
 *.safetensors
 checkpoints/
+
+# Jupyter
+.ipynb_checkpoints/

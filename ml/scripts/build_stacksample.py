@@ -1,7 +1,7 @@
 """Builds the StackSample splits and writes DATA_CARD.md.
 
-On Kaggle:
-    python scripts/build_stacksample.py --raw-dir /kaggle/input/stacksample --out data/processed/stacksample
+On Kaggle (finds the attached StackSample dataset under /kaggle/input):
+    python scripts/build_stacksample.py --input-root /kaggle/input --out data/processed/stacksample
 On a laptop (tiny hand-made sample, never the real data):
     python scripts/build_stacksample.py --fixture
 """
@@ -12,6 +12,7 @@ import json
 from athena_advisor.config import ConfigError, load_config
 from athena_advisor.data.build import build
 from athena_advisor.data.data_card import write_data_card
+from athena_advisor.data.locate import find_stacksample_dir
 from athena_advisor.paths import resolve
 
 FIXTURE_DIR = "tests/fixtures/stacksample_tiny"
@@ -26,6 +27,7 @@ def main() -> int:
     )
     parser.add_argument("--config", default="configs/base.yaml", help="experiment config (default: base)")
     parser.add_argument("--raw-dir", help="folder with Questions.csv and Tags.csv (default: data.raw_dir)")
+    parser.add_argument("--input-root", help="search this folder for Questions.csv and Tags.csv instead")
     parser.add_argument("--out", help="output folder (default: data.processed_dir/stacksample)")
     parser.add_argument("--fixture", action="store_true", help="build from the tiny test fixtures instead")
     parser.add_argument("--set", action="append", default=[], metavar="KEY=VALUE", help="config override")
@@ -36,7 +38,16 @@ def main() -> int:
         config = load_config(args.config, overrides)
     except ConfigError as exc:
         parser.error(str(exc))
-    raw_dir = FIXTURE_DIR if args.fixture else (args.raw_dir or config.data.raw_dir)
+    if args.fixture:
+        raw_dir = FIXTURE_DIR
+    elif args.input_root:
+        try:
+            raw_dir = str(find_stacksample_dir(args.input_root))
+        except FileNotFoundError as exc:
+            parser.error(str(exc))
+        print(f"Found StackSample in {raw_dir}")
+    else:
+        raw_dir = args.raw_dir or config.data.raw_dir
     out_dir = args.out or (FIXTURE_OUT if args.fixture else f"{config.data.processed_dir}/stacksample")
 
     info = build(config, raw_dir, out_dir)
