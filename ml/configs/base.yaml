@@ -10,11 +10,16 @@ data:
   raw_dir: data/raw/stacksample
   processed_dir: data/processed
   tag_map: configs/tag_map.yaml
-  body_prose_tokens: 64
+  body_prose_words: 64
   max_length: 128
-  # Chronological by CreationDate: train, validation-tune, calibration, test.
+  # Chronological by CreationDate: train, val_tune, val_cal, test.
   split_fractions: [0.80, 0.07, 0.06, 0.07]
   sample_size: null
+  # Train is sampled down to this size with sample_seed; val_tune, val_cal and test stay complete.
+  train_max: 300000
+  sample_seed: 0
+  csv_encoding: latin-1
+  chunk_size: 100000
 
 model:
   encoder: sentence-transformers/all-MiniLM-L6-v2

@@ -21,6 +21,7 @@ import yaml
 from athena_advisor.paths import resolve
 
 SPECIALISTS = ["blueprint", "code", "checker", "deploy", "eva"]
+SPLITS = ["train", "val_tune", "val_cal", "test"]
 
 
 @dataclass
@@ -28,13 +29,19 @@ class DataConfig:
     raw_dir: str = "data/raw/stacksample"
     processed_dir: str = "data/processed"
     tag_map: str = "configs/tag_map.yaml"
-    # Model input is the title plus the first N tokens of the body's prose (code blocks removed).
-    body_prose_tokens: int = 64
+    # Model input is the title plus the first N words of the body's prose (code removed).
+    body_prose_words: int = 64
     max_length: int = 128
-    # Chronological split by CreationDate: train, validation-tune, calibration, test (oldest to newest).
+    # Chronological split by CreationDate into SPLITS (oldest to newest): train, val_tune, val_cal, test.
     split_fractions: list[float] = field(default_factory=lambda: [0.80, 0.07, 0.06, 0.07])
-    # Cap on the number of questions used, for quick runs. None uses everything.
+    # Only read the first N questions of the file, for quick runs. None reads everything.
     sample_size: int | None = None
+    # The train split is randomly sampled down to this many questions; validation and test stay complete.
+    train_max: int | None = 300000
+    sample_seed: int = 0
+    # The StackSample CSV files are Latin-1 encoded.
+    csv_encoding: str = "latin-1"
+    chunk_size: int = 100000
 
 
 @dataclass

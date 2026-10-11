@@ -1,0 +1,335 @@
+# Stack Overflow tag -> Athena specialist.
+#
+# This table is the ONLY source of labels: a question's team is the set of specialists its human-written
+# tags map to. Tags are never given to the model as input. The table is fixed and published with the
+# papers; changing it changes every label, so its SHA-256 is stored with every processed dataset.
+#
+# generic: true marks broad tags (a whole language, runtime or database engine) that say little about
+# what the question is about. Lead selection counts specific tags first and only falls back to generic
+# ones when a question has nothing more specific.
+#
+# Ties for the lead are broken by this order: the narrower, more actionable specialist wins over the
+# broader one (a dependency error is a checker job even when it happens in Python code).
+priority: [checker, deploy, eva, blueprint, code]
+
+tags:
+  # ---------------------------------------------------------------- blueprint
+  # Choices made before or above the code: architecture, design patterns, data modelling, ORM and
+  # framework choices, API design and how the system scales. Athena: the Tech Stack agent.
+  - {tag: architecture, specialist: blueprint, generic: false}
+  - {tag: software-design, specialist: blueprint, generic: false}
+  - {tag: design-patterns, specialist: blueprint, generic: false}
+  - {tag: database-design, specialist: blueprint, generic: false}
+  - {tag: database-schema, specialist: blueprint, generic: false}
+  - {tag: data-modeling, specialist: blueprint, generic: false}
+  - {tag: entity-relationship, specialist: blueprint, generic: false}
+  - {tag: database-normalization, specialist: blueprint, generic: false}
+  - {tag: orm, specialist: blueprint, generic: false}
+  - {tag: sqlalchemy, specialist: blueprint, generic: false}
+  - {tag: hibernate, specialist: blueprint, generic: false}
+  - {tag: jpa, specialist: blueprint, generic: false}
+  - {tag: entity-framework, specialist: blueprint, generic: false}
+  - {tag: sequelize.js, specialist: blueprint, generic: false}
+  - {tag: mongoose, specialist: blueprint, generic: false}
+  - {tag: typeorm, specialist: blueprint, generic: false}
+  - {tag: prisma, specialist: blueprint, generic: false}
+  - {tag: rest, specialist: blueprint, generic: false}
+  - {tag: restful-architecture, specialist: blueprint, generic: false}
+  - {tag: api-design, specialist: blueprint, generic: false}
+  - {tag: graphql, specialist: blueprint, generic: false}
+  - {tag: microservices, specialist: blueprint, generic: false}
+  - {tag: scalability, specialist: blueprint, generic: false}
+  - {tag: model-view-controller, specialist: blueprint, generic: false}
+  - {tag: mvvm, specialist: blueprint, generic: false}
+  - {tag: oop, specialist: blueprint, generic: false}
+  - {tag: solid-principles, specialist: blueprint, generic: false}
+  - {tag: dependency-injection, specialist: blueprint, generic: false}
+  - {tag: domain-driven-design, specialist: blueprint, generic: false}
+  - {tag: clean-architecture, specialist: blueprint, generic: false}
+  - {tag: repository-pattern, specialist: blueprint, generic: false}
+  - {tag: singleton, specialist: blueprint, generic: false}
+  - {tag: factory-pattern, specialist: blueprint, generic: false}
+  - {tag: observer-pattern, specialist: blueprint, generic: false}
+  - {tag: uml, specialist: blueprint, generic: false}
+  - {tag: event-driven, specialist: blueprint, generic: false}
+  - {tag: message-queue, specialist: blueprint, generic: false}
+  - {tag: rabbitmq, specialist: blueprint, generic: false}
+  - {tag: apache-kafka, specialist: blueprint, generic: false}
+  - {tag: caching, specialist: blueprint, generic: false}
+  - {tag: redis, specialist: blueprint, generic: false}
+  - {tag: authentication, specialist: blueprint, generic: false}
+  - {tag: authorization, specialist: blueprint, generic: false}
+  - {tag: oauth-2.0, specialist: blueprint, generic: false}
+  - {tag: jwt, specialist: blueprint, generic: false}
+  - {tag: single-page-application, specialist: blueprint, generic: false}
+  - {tag: language-agnostic, specialist: blueprint, generic: false}
+  - {tag: comparison, specialist: blueprint, generic: false}
+  - {tag: frameworks, specialist: blueprint, generic: false}
+  - {tag: web-applications, specialist: blueprint, generic: true}
+  - {tag: database, specialist: blueprint, generic: true}
+
+  # ---------------------------------------------------------------- code
+  # Writing and debugging the program itself: languages, frameworks, libraries, language features and
+  # runtime errors. Broad language, runtime and database-engine tags are generic. Athena: the Code agent.
+  - {tag: python, specialist: code, generic: true}
+  - {tag: python-3.x, specialist: code, generic: true}
+  - {tag: python-2.7, specialist: code, generic: true}
+  - {tag: javascript, specialist: code, generic: true}
+  - {tag: typescript, specialist: code, generic: true}
+  - {tag: java, specialist: code, generic: true}
+  - {tag: c#, specialist: code, generic: true}
+  - {tag: c++, specialist: code, generic: true}
+  - {tag: c, specialist: code, generic: true}
+  - {tag: php, specialist: code, generic: true}
+  - {tag: ruby, specialist: code, generic: true}
+  - {tag: go, specialist: code, generic: true}
+  - {tag: rust, specialist: code, generic: true}
+  - {tag: kotlin, specialist: code, generic: true}
+  - {tag: swift, specialist: code, generic: true}
+  - {tag: scala, specialist: code, generic: true}
+  - {tag: r, specialist: code, generic: true}
+  - {tag: dart, specialist: code, generic: true}
+  - {tag: html, specialist: code, generic: true}
+  - {tag: css, specialist: code, generic: true}
+  - {tag: sql, specialist: code, generic: true}
+  - {tag: mysql, specialist: code, generic: true}
+  - {tag: postgresql, specialist: code, generic: true}
+  - {tag: sql-server, specialist: code, generic: true}
+  - {tag: oracle, specialist: code, generic: true}
+  - {tag: sqlite, specialist: code, generic: true}
+  - {tag: mongodb, specialist: code, generic: true}
+  - {tag: node.js, specialist: code, generic: true}
+  - {tag: .net, specialist: code, generic: true}
+  - {tag: android, specialist: code, generic: true}
+  - {tag: ios, specialist: code, generic: true}
+  - {tag: jquery, specialist: code, generic: true}
+  - {tag: reactjs, specialist: code, generic: false}
+  - {tag: react-native, specialist: code, generic: false}
+  - {tag: react-hooks, specialist: code, generic: false}
+  - {tag: redux, specialist: code, generic: false}
+  - {tag: angular, specialist: code, generic: false}
+  - {tag: angularjs, specialist: code, generic: false}
+  - {tag: vue.js, specialist: code, generic: false}
+  - {tag: svelte, specialist: code, generic: false}
+  - {tag: next.js, specialist: code, generic: false}
+  - {tag: django, specialist: code, generic: false}
+  - {tag: django-models, specialist: code, generic: false}
+  - {tag: django-rest-framework, specialist: code, generic: false}
+  - {tag: flask, specialist: code, generic: false}
+  - {tag: fastapi, specialist: code, generic: false}
+  - {tag: express, specialist: code, generic: false}
+  - {tag: spring, specialist: code, generic: false}
+  - {tag: spring-boot, specialist: code, generic: false}
+  - {tag: spring-mvc, specialist: code, generic: false}
+  - {tag: ruby-on-rails, specialist: code, generic: false}
+  - {tag: laravel, specialist: code, generic: false}
+  - {tag: asp.net, specialist: code, generic: false}
+  - {tag: asp.net-mvc, specialist: code, generic: false}
+  - {tag: asp.net-core, specialist: code, generic: false}
+  - {tag: wpf, specialist: code, generic: false}
+  - {tag: winforms, specialist: code, generic: false}
+  - {tag: flutter, specialist: code, generic: false}
+  - {tag: pandas, specialist: code, generic: false}
+  - {tag: numpy, specialist: code, generic: false}
+  - {tag: matplotlib, specialist: code, generic: false}
+  - {tag: tensorflow, specialist: code, generic: false}
+  - {tag: keras, specialist: code, generic: false}
+  - {tag: scikit-learn, specialist: code, generic: false}
+  - {tag: pytorch, specialist: code, generic: false}
+  - {tag: arrays, specialist: code, generic: false}
+  - {tag: string, specialist: code, generic: false}
+  - {tag: list, specialist: code, generic: false}
+  - {tag: dictionary, specialist: code, generic: false}
+  - {tag: loops, specialist: code, generic: false}
+  - {tag: for-loop, specialist: code, generic: false}
+  - {tag: function, specialist: code, generic: false}
+  - {tag: class, specialist: code, generic: false}
+  - {tag: recursion, specialist: code, generic: false}
+  - {tag: algorithm, specialist: code, generic: false}
+  - {tag: sorting, specialist: code, generic: false}
+  - {tag: regex, specialist: code, generic: false}
+  - {tag: json, specialist: code, generic: false}
+  - {tag: xml, specialist: code, generic: false}
+  - {tag: parsing, specialist: code, generic: false}
+  - {tag: csv, specialist: code, generic: false}
+  - {tag: datetime, specialist: code, generic: false}
+  - {tag: multithreading, specialist: code, generic: false}
+  - {tag: asynchronous, specialist: code, generic: false}
+  - {tag: async-await, specialist: code, generic: false}
+  - {tag: promise, specialist: code, generic: false}
+  - {tag: ajax, specialist: code, generic: false}
+  - {tag: dom, specialist: code, generic: false}
+  - {tag: linq, specialist: code, generic: false}
+  - {tag: generics, specialist: code, generic: false}
+  - {tag: lambda, specialist: code, generic: false}
+  - {tag: pointers, specialist: code, generic: false}
+  - {tag: debugging, specialist: code, generic: false}
+  - {tag: exception, specialist: code, generic: false}
+  - {tag: exception-handling, specialist: code, generic: false}
+  - {tag: error-handling, specialist: code, generic: false}
+  - {tag: typeerror, specialist: code, generic: false}
+  - {tag: nullpointerexception, specialist: code, generic: false}
+  - {tag: nullreferenceexception, specialist: code, generic: false}
+  - {tag: undefined, specialist: code, generic: false}
+  - {tag: segmentation-fault, specialist: code, generic: false}
+  - {tag: memory-leaks, specialist: code, generic: false}
+  - {tag: runtime-error, specialist: code, generic: false}
+  - {tag: indexoutofboundsexception, specialist: code, generic: false}
+  - {tag: keyerror, specialist: code, generic: false}
+  - {tag: attributeerror, specialist: code, generic: false}
+  - {tag: valueerror, specialist: code, generic: false}
+
+  # ---------------------------------------------------------------- checker
+  # Problems a static check can find before anything runs: missing or conflicting dependencies, package
+  # managers and manifests, import resolution, linters, compiler and syntax errors. Athena: the
+  # consistency checker (team code), which already checks exactly these things.
+  - {tag: npm, specialist: checker, generic: false}
+  - {tag: npm-install, specialist: checker, generic: false}
+  - {tag: yarnpkg, specialist: checker, generic: false}
+  - {tag: pip, specialist: checker, generic: false}
+  - {tag: pipenv, specialist: checker, generic: false}
+  - {tag: python-poetry, specialist: checker, generic: false}
+  - {tag: conda, specialist: checker, generic: false}
+  - {tag: anaconda, specialist: checker, generic: false}
+  - {tag: virtualenv, specialist: checker, generic: false}
+  - {tag: setuptools, specialist: checker, generic: false}
+  - {tag: maven, specialist: checker, generic: false}
+  - {tag: gradle, specialist: checker, generic: false}
+  - {tag: composer-php, specialist: checker, generic: false}
+  - {tag: nuget, specialist: checker, generic: false}
+  - {tag: package.json, specialist: checker, generic: false}
+  - {tag: requirements.txt, specialist: checker, generic: false}
+  - {tag: dependencies, specialist: checker, generic: false}
+  - {tag: dependency-management, specialist: checker, generic: false}
+  - {tag: package-managers, specialist: checker, generic: false}
+  - {tag: version-conflict, specialist: checker, generic: false}
+  - {tag: semantic-versioning, specialist: checker, generic: false}
+  - {tag: importerror, specialist: checker, generic: false}
+  - {tag: modulenotfounderror, specialist: checker, generic: false}
+  - {tag: import, specialist: checker, generic: false}
+  - {tag: classnotfoundexception, specialist: checker, generic: false}
+  - {tag: noclassdeffounderror, specialist: checker, generic: false}
+  - {tag: classpath, specialist: checker, generic: false}
+  - {tag: eslint, specialist: checker, generic: false}
+  - {tag: tslint, specialist: checker, generic: false}
+  - {tag: jshint, specialist: checker, generic: false}
+  - {tag: pylint, specialist: checker, generic: false}
+  - {tag: flake8, specialist: checker, generic: false}
+  - {tag: mypy, specialist: checker, generic: false}
+  - {tag: prettier, specialist: checker, generic: false}
+  - {tag: linter, specialist: checker, generic: false}
+  - {tag: static-analysis, specialist: checker, generic: false}
+  - {tag: compiler-errors, specialist: checker, generic: false}
+  - {tag: compiler-warnings, specialist: checker, generic: false}
+  - {tag: compilation, specialist: checker, generic: false}
+  - {tag: syntax-error, specialist: checker, generic: false}
+  - {tag: webpack, specialist: checker, generic: false}
+  - {tag: babeljs, specialist: checker, generic: false}
+  - {tag: cmake, specialist: checker, generic: false}
+  - {tag: makefile, specialist: checker, generic: false}
+
+  # ---------------------------------------------------------------- deploy
+  # Getting the app running somewhere else: containers, web servers, cloud hosts, CI/CD, TLS,
+  # configuration through environment variables, and server operations. Broad OS tags are generic.
+  # Athena: the Deployment & Summary agent (deploy part).
+  - {tag: docker, specialist: deploy, generic: false}
+  - {tag: dockerfile, specialist: deploy, generic: false}
+  - {tag: docker-compose, specialist: deploy, generic: false}
+  - {tag: kubernetes, specialist: deploy, generic: false}
+  - {tag: nginx, specialist: deploy, generic: false}
+  - {tag: nginx-reverse-proxy, specialist: deploy, generic: false}
+  - {tag: apache, specialist: deploy, generic: false}
+  - {tag: apache2, specialist: deploy, generic: false}
+  - {tag: .htaccess, specialist: deploy, generic: false}
+  - {tag: tomcat, specialist: deploy, generic: false}
+  - {tag: iis, specialist: deploy, generic: false}
+  - {tag: gunicorn, specialist: deploy, generic: false}
+  - {tag: uwsgi, specialist: deploy, generic: false}
+  - {tag: wsgi, specialist: deploy, generic: false}
+  - {tag: pm2, specialist: deploy, generic: false}
+  - {tag: reverse-proxy, specialist: deploy, generic: false}
+  - {tag: proxy, specialist: deploy, generic: false}
+  - {tag: load-balancing, specialist: deploy, generic: false}
+  - {tag: heroku, specialist: deploy, generic: false}
+  - {tag: amazon-web-services, specialist: deploy, generic: false}
+  - {tag: aws, specialist: deploy, generic: false}
+  - {tag: amazon-ec2, specialist: deploy, generic: false}
+  - {tag: amazon-s3, specialist: deploy, generic: false}
+  - {tag: aws-lambda, specialist: deploy, generic: false}
+  - {tag: azure, specialist: deploy, generic: false}
+  - {tag: azure-devops, specialist: deploy, generic: false}
+  - {tag: azure-web-app-service, specialist: deploy, generic: false}
+  - {tag: google-cloud-platform, specialist: deploy, generic: false}
+  - {tag: google-app-engine, specialist: deploy, generic: false}
+  - {tag: firebase-hosting, specialist: deploy, generic: false}
+  - {tag: vercel, specialist: deploy, generic: false}
+  - {tag: netlify, specialist: deploy, generic: false}
+  - {tag: digital-ocean, specialist: deploy, generic: false}
+  - {tag: serverless, specialist: deploy, generic: false}
+  - {tag: deployment, specialist: deploy, generic: false}
+  - {tag: continuous-integration, specialist: deploy, generic: false}
+  - {tag: continuous-deployment, specialist: deploy, generic: false}
+  - {tag: github-actions, specialist: deploy, generic: false}
+  - {tag: gitlab-ci, specialist: deploy, generic: false}
+  - {tag: jenkins, specialist: deploy, generic: false}
+  - {tag: travis-ci, specialist: deploy, generic: false}
+  - {tag: circleci, specialist: deploy, generic: false}
+  - {tag: devops, specialist: deploy, generic: false}
+  - {tag: terraform, specialist: deploy, generic: false}
+  - {tag: ansible, specialist: deploy, generic: false}
+  - {tag: ssl, specialist: deploy, generic: false}
+  - {tag: ssl-certificate, specialist: deploy, generic: false}
+  - {tag: https, specialist: deploy, generic: false}
+  - {tag: lets-encrypt, specialist: deploy, generic: false}
+  - {tag: cors, specialist: deploy, generic: false}
+  - {tag: dns, specialist: deploy, generic: false}
+  - {tag: environment-variables, specialist: deploy, generic: false}
+  - {tag: server, specialist: deploy, generic: false}
+  - {tag: webserver, specialist: deploy, generic: false}
+  - {tag: hosting, specialist: deploy, generic: false}
+  - {tag: web-hosting, specialist: deploy, generic: false}
+  - {tag: vps, specialist: deploy, generic: false}
+  - {tag: cloud, specialist: deploy, generic: false}
+  - {tag: port, specialist: deploy, generic: false}
+  - {tag: linux, specialist: deploy, generic: true}
+  - {tag: ubuntu, specialist: deploy, generic: true}
+
+  # ---------------------------------------------------------------- eva
+  # Checking that the app works and is usable: test frameworks, test kinds, mocking, coverage, and
+  # usability and accessibility. Athena: EVA, which tests the app as virtual users.
+  - {tag: testing, specialist: eva, generic: false}
+  - {tag: unit-testing, specialist: eva, generic: false}
+  - {tag: integration-testing, specialist: eva, generic: false}
+  - {tag: automated-tests, specialist: eva, generic: false}
+  - {tag: e2e-testing, specialist: eva, generic: false}
+  - {tag: load-testing, specialist: eva, generic: false}
+  - {tag: tdd, specialist: eva, generic: false}
+  - {tag: bdd, specialist: eva, generic: false}
+  - {tag: jestjs, specialist: eva, generic: false}
+  - {tag: pytest, specialist: eva, generic: false}
+  - {tag: python-unittest, specialist: eva, generic: false}
+  - {tag: junit, specialist: eva, generic: false}
+  - {tag: junit4, specialist: eva, generic: false}
+  - {tag: junit5, specialist: eva, generic: false}
+  - {tag: testng, specialist: eva, generic: false}
+  - {tag: mocha, specialist: eva, generic: false}
+  - {tag: mocha.js, specialist: eva, generic: false}
+  - {tag: jasmine, specialist: eva, generic: false}
+  - {tag: karma-runner, specialist: eva, generic: false}
+  - {tag: phpunit, specialist: eva, generic: false}
+  - {tag: rspec, specialist: eva, generic: false}
+  - {tag: nunit, specialist: eva, generic: false}
+  - {tag: xunit, specialist: eva, generic: false}
+  - {tag: cucumber, specialist: eva, generic: false}
+  - {tag: selenium, specialist: eva, generic: false}
+  - {tag: selenium-webdriver, specialist: eva, generic: false}
+  - {tag: cypress, specialist: eva, generic: false}
+  - {tag: playwright, specialist: eva, generic: false}
+  - {tag: react-testing-library, specialist: eva, generic: false}
+  - {tag: enzyme, specialist: eva, generic: false}
+  - {tag: mocking, specialist: eva, generic: false}
+  - {tag: mockito, specialist: eva, generic: false}
+  - {tag: code-coverage, specialist: eva, generic: false}
+  - {tag: usability, specialist: eva, generic: false}
+  - {tag: accessibility, specialist: eva, generic: false}
+  - {tag: user-experience, specialist: eva, generic: false}

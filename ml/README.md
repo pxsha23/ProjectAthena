@@ -46,10 +46,31 @@ python -m uv run pytest                    # unit tests (tiny fixtures only, a f
 python -m uv run ruff check .              # lint
 python -m uv run ruff format .             # format
 
+# Build the dataset from the tiny fixtures (writes data/processed/fixture, including DATA_CARD.md)
+python -m uv run python scripts/build_stacksample.py --fixture
+
 # Show the fully resolved config for an experiment, with optional dotted overrides
 python -m uv run python scripts/show_config.py configs/experiments/smoke.yaml
 python -m uv run python scripts/show_config.py configs/experiments/ablation_no_film.yaml --set train.epochs=1
 ```
+
+On Kaggle, with the StackSample dataset attached to the notebook:
+
+```bash
+python scripts/build_stacksample.py --raw-dir /kaggle/input/stacksample --out data/processed/stacksample
+```
+
+## Dataset pipeline (`src/athena_advisor/data/`)
+
+| Module | What it does |
+| --- | --- |
+| `labels.py` | Team and lead from the question's tags through `configs/tag_map.yaml` (299 tags). Specific tags decide the lead before generic ones; ties go to checker, deploy, eva, blueprint, code. Questions with no mapped tag are dropped. |
+| `text.py` | Model input: title plus the first 64 words of the body prose, with HTML and all code removed. Never sees tags. |
+| `context.py` | `ContextSchema`: 16 fields read from the body with documented regex rules, encoded as a 43-value float32 vector (a `present` flag, then the fields; categories one-hot). `from_athena_state()` is planned. |
+| `build.py` | Two chunked passes over `Questions.csv` and `Tags.csv`: labels and dates first, then text and context for the selected questions. Chronological train / val_tune / val_cal / test, train sampled to `data.train_max` with seed 0. One parquet file per split, a `.sha256` file for each, and `build_info.json`. |
+| `data_card.py` | `DATA_CARD.md`: source, licence wording, filters, counts per split, specialist and lead, co-occurrence, context feature rates and the full tag map. |
+
+The same input and config always give byte-identical parquet files (rows are sorted by date, then id).
 
 ## Configs
 
