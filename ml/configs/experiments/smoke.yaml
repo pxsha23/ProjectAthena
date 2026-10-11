@@ -1,0 +1,10 @@
+# Tiny run that finishes in minutes on a laptop CPU: checks the whole pipeline end to end, not results.
+extends: ../base.yaml
+experiment: smoke
+data:
+  sample_size: 200
+train:
+  seeds: [0]
+  epochs: 1
+  batch_size: 8
+  device: cpu

@@ -1,0 +1,55 @@
+# Base configuration for every Athena Advisor experiment.
+# Experiment files in configs/experiments/ start with `extends: ../base.yaml` and list only what they change.
+# Every value here is used in the papers, so change it here only on purpose.
+
+experiment: base
+condition: full
+results_dir: results
+
+data:
+  raw_dir: data/raw/stacksample
+  processed_dir: data/processed
+  tag_map: configs/tag_map.yaml
+  body_prose_tokens: 64
+  max_length: 128
+  # Chronological by CreationDate: train, validation-tune, calibration, test.
+  split_fractions: [0.80, 0.07, 0.06, 0.07]
+  sample_size: null
+
+model:
+  encoder: sentence-transformers/all-MiniLM-L6-v2
+  specialists: [blueprint, code, checker, deploy, eva]
+  context_hidden: 64
+  use_film: true
+  use_label_attention: true
+  use_coactivation: true
+  coactivation_pmi_scale: 0.1
+  coactivation_l2: 0.001
+
+loss:
+  focal_gamma: 2.0
+  lead_weight: 1.0
+  use_contrastive: true
+  contrastive_weight: 0.1
+  contrastive_temperature: 0.07
+
+train:
+  seeds: [0, 1, 2, 3, 4]
+  batch_size: 32
+  epochs: 3
+  encoder_learning_rate: 2.0e-5
+  head_learning_rate: 1.0e-3
+  weight_decay: 0.01
+  warmup_ratio: 0.1
+  device: auto
+  deterministic: false
+
+decision:
+  use_temperature_scaling: true
+  use_conformal: true
+  conformal_coverage: 0.9
+  fixed_threshold: 0.5
+  use_cost_aware: true
+  max_team_size: 4
+  lambdas: {learner: 0.2, builder: 0.5, fast: 1.0}
+  default_costs: {blueprint: 1.0, code: 2.0, checker: 0.2, deploy: 1.0, eva: 1.5}

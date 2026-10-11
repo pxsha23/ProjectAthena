@@ -1,0 +1,10 @@
+# Datasets never go into Git: raw downloads and everything derived from them.
+data/raw/
+data/processed/
+
+# Large model artifacts. Result JSON files are small and are committed.
+*.pt
+*.bin
+*.onnx
+*.safetensors
+checkpoints/

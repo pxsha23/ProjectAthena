@@ -1,0 +1,11 @@
+Id,OwnerUserId,CreationDate,ClosedDate,Score,Title,Body
+101,11,2012-01-05T09:12:00Z,NA,3,Should I use PostgreSQL or MongoDB for a booking app?,"<p>I am building a room booking app with users, rooms and bookings. Which database fits better and why?</p>"
+102,12,2012-03-17T14:40:00Z,NA,1,TypeError when calling a function returned from a dict,"<p>My handler crashes with this error:</p><pre><code>TypeError: 'NoneType' object is not callable</code></pre><p>The dict should always contain the key.</p>"
+103,13,2012-06-02T08:05:00Z,NA,0,How do I write a unit test for a Flask route?,"<p>I want to check that my login route returns 401 for a wrong password. How do I test it?</p><pre><code>@app.route('/login', methods=['POST'])
+def login():
+    ...</code></pre>"
+104,14,2012-09-21T19:30:00Z,2012-09-22T10:00:00Z,-1,Docker container exits immediately after start,"<p>I run <code>docker run myapp</code> and the container stops at once. The Dockerfile ends with <code>CMD python app.py</code>. Port 8000 is exposed.</p>"
+105,15,2013-01-11T11:11:00Z,NA,5,Users cannot find the save button on mobile,"<p>In testing, people on small screens could not find how to save their form. What usability checks should I run?</p>"
+106,16,2013-04-30T16:45:00Z,NA,2,Nginx returns 502 Bad Gateway behind a load balancer,"<p>After deploying, every request gives 502. The app listens on port 5000 and nginx.conf proxies to it.</p>"
+107,17,2013-08-08T07:20:00Z,NA,0,Why does my React state not update right away?,"<p>I call <code>setCount(count + 1)</code> and log <code>count</code> on the next line, but it shows the old value.</p>"
+108,18,2013-12-24T22:00:00Z,NA,1,Best way to structure a REST API with Express and MySQL,"<p>Should the database code live in the routes, or in a separate layer? What folder structure is common?</p>"
