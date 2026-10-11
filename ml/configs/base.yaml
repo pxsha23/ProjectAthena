@@ -66,3 +66,14 @@ benchmarks:
   nlbse_dev_fraction: 0.1
   nlbse_train_max: 200000
   seed: 0
+
+baselines:
+  tfidf_min_df: 2
+  tfidf_max_features: 200000
+  # SetFit is a few-shot baseline: trained on a seeded, stratified sample of train of at most this size.
+  setfit_model: sentence-transformers/all-MiniLM-L6-v2
+  setfit_train_max: 2000
+  setfit_num_iterations: 20
+  setfit_epochs: 1
+  setfit_batch_size: 16
+  report_threshold: 0.5

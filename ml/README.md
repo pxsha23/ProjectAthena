@@ -114,7 +114,20 @@ Source lookups (URLs, licences, citations) live in `sources.py` and were checked
 | `eval/data.py` | Any split as arrays: ids, texts, 0/1 team matrix, lead index (-1 when none), out-of-scope flags. Benchmarks use every label from all their splits. |
 | `eval/metrics.py` | Micro, macro and samples F1, exact match, Hamming loss, per-label precision, recall and F1, lead accuracy (rows with a lead only, count reported), team and lead ECE (15 bins), intent accuracy (MixATIS, MixSNIPS), in-scope accuracy and out-of-scope recall (CLINC150), micro and macro F1 (NLBSE). |
 | `eval/stats.py` | Seeded bootstrap 95% intervals (1000 resamples), paired bootstrap for F1 differences, McNemar for lead accuracy, mean and standard deviation across seeds. |
-| `baselines/` | `prior` (train label frequencies), `keyword` (StackSample only: tag names found in the text, labelled like the gold data; raises `NotApplicable` on benchmarks), `tfidf_lr` (TF-IDF 1-2 grams; one-vs-rest logistic regression for multi-label data, multinomial for the lead and for single-label data). |
+| `baselines/` | `prior` (train label frequencies), `keyword` (StackSample only: tag names found in the text, labelled like the gold data; raises `NotApplicable` on benchmarks), `tfidf_lr` (TF-IDF 1-2 grams; one-vs-rest logistic regression for multi-label data, multinomial for the lead and for single-label data), `setfit` (few-shot: one-vs-rest or multiclass SetFit on a seeded, stratified sample of at most `baselines.setfit_train_max` train rows; lead = highest probability). |
+| `decide/simple.py` | Reference decision rules on any predictions file: `call_all` (every label active, lead = highest lead probability) and `top1` (only the most likely label, which is also the lead). |
+| `baselines/run.py` | Trains a baseline, writes predictions for val_tune, val_cal and test, and a run record with metrics. Benchmark dev splits are cut into fixed val_tune and val_cal halves. Writes `not_applicable.json` instead when a baseline does not apply. |
+
+Run a baseline (all seeds in `train.seeds` unless `--seed` is given; finished runs are skipped unless `--force`):
+
+```bash
+python -m uv run python scripts/run_baseline.py --baseline tfidf_lr --dataset stacksample
+python -m uv run python scripts/run_baseline.py --baseline setfit --dataset clinc150 --seed 0
+```
+
+Predictions go to `results/predictions/<baseline>/<dataset>/<split>/<seed>.npz` and run records to
+`results/baselines_<dataset>/<baseline>/<seed>.json`. Run the real datasets on Kaggle; SetFit downloads its
+encoder there.
 
 ## Configs
 

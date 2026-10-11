@@ -95,6 +95,20 @@ class BenchmarksConfig:
 
 
 @dataclass
+class BaselinesConfig:
+    tfidf_min_df: int = 2
+    tfidf_max_features: int = 200000
+    # SetFit is a few-shot method: it trains on a small, seeded, stratified sample of train.
+    setfit_model: str = "sentence-transformers/all-MiniLM-L6-v2"
+    setfit_train_max: int = 2000
+    setfit_num_iterations: int = 20
+    setfit_epochs: int = 1
+    setfit_batch_size: int = 16
+    # Probability threshold that turns team probabilities into labels in the baseline run records.
+    report_threshold: float = 0.5
+
+
+@dataclass
 class DecisionConfig:
     use_temperature_scaling: bool = True
     use_conformal: bool = True
@@ -122,6 +136,7 @@ class AdvisorConfig:
     train: TrainConfig = field(default_factory=TrainConfig)
     decision: DecisionConfig = field(default_factory=DecisionConfig)
     benchmarks: BenchmarksConfig = field(default_factory=BenchmarksConfig)
+    baselines: BaselinesConfig = field(default_factory=BaselinesConfig)
 
     def to_dict(self) -> dict[str, Any]:
         return dataclasses.asdict(self)
