@@ -106,6 +106,16 @@ plus `info.json` and a `DATA_CARD.md` with the exact source, version, licence an
 
 Source lookups (URLs, licences, citations) live in `sources.py` and were checked against the official pages.
 
+## Evaluation (`src/athena_advisor/eval/`) and baselines (`src/athena_advisor/baselines/`)
+
+| Module | What it does |
+| --- | --- |
+| `eval/predictions.py` | The one saved predictions format: `results/predictions/<model>/<dataset>/<split>/<seed>.npz` with ids, label list, team and lead probabilities (n x K), latency per item and run metadata. Calibration, conformal prediction, decisions and metrics only read these files, so nothing is retrained to try a new rule. |
+| `eval/data.py` | Any split as arrays: ids, texts, 0/1 team matrix, lead index (-1 when none), out-of-scope flags. Benchmarks use every label from all their splits. |
+| `eval/metrics.py` | Micro, macro and samples F1, exact match, Hamming loss, per-label precision, recall and F1, lead accuracy (rows with a lead only, count reported), team and lead ECE (15 bins), intent accuracy (MixATIS, MixSNIPS), in-scope accuracy and out-of-scope recall (CLINC150), micro and macro F1 (NLBSE). |
+| `eval/stats.py` | Seeded bootstrap 95% intervals (1000 resamples), paired bootstrap for F1 differences, McNemar for lead accuracy, mean and standard deviation across seeds. |
+| `baselines/` | `prior` (train label frequencies), `keyword` (StackSample only: tag names found in the text, labelled like the gold data; raises `NotApplicable` on benchmarks), `tfidf_lr` (TF-IDF 1-2 grams; one-vs-rest logistic regression for multi-label data, multinomial for the lead and for single-label data). |
+
 ## Configs
 
 - Loading is strict: an unknown key or a wrong type stops the run with a clear message, so a typo can never
