@@ -1,0 +1,4 @@
+# Ablations: the full model with every component on (the reference condition).
+extends: ../base.yaml
+experiment: ablations
+condition: full

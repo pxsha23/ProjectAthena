@@ -20,7 +20,7 @@ def test_experiment_extends_base_and_overrides_only_what_it_lists() -> None:
 
 
 def test_ablation_config() -> None:
-    config = load_config("configs/experiments/ablation_no_film.yaml")
+    config = load_config("configs/experiments/no_film.yaml")
     assert (config.experiment, config.condition, config.model.use_film) == ("ablations", "no_film", False)
     assert config.model.use_label_attention is True
 

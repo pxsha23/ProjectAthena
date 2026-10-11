@@ -1,0 +1,6 @@
+# Ablation: no co-activation between labels.
+extends: ../base.yaml
+experiment: ablations
+condition: no_coactivation
+model:
+  use_coactivation: false

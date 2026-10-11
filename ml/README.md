@@ -70,7 +70,7 @@ python -m uv run python scripts/download_benchmarks.py --fixture
 
 # Show the fully resolved config for an experiment, with optional dotted overrides
 python -m uv run python scripts/show_config.py configs/experiments/smoke.yaml
-python -m uv run python scripts/show_config.py configs/experiments/ablation_no_film.yaml --set train.epochs=1
+python -m uv run python scripts/show_config.py configs/experiments/no_film.yaml --set train.epochs=1
 ```
 
 On Kaggle, with the StackSample dataset attached to the notebook:
@@ -128,6 +128,29 @@ python -m uv run python scripts/run_baseline.py --baseline setfit --dataset clin
 Predictions go to `results/predictions/<baseline>/<dataset>/<split>/<seed>.npz` and run records to
 `results/baselines_<dataset>/<baseline>/<seed>.json`. Run the real datasets on Kaggle; SetFit downloads its
 encoder there.
+
+## Model (`src/athena_advisor/model/`) and losses (`src/athena_advisor/losses/`)
+
+| Part | Module | Switch |
+| --- | --- | --- |
+| A. Encoder: token states and mask (MiniLM by default) | `encoder.py` | always on |
+| B. State encoder: context (43) -> 64 -> 2 x hidden, last layer zero-initialised | `state_encoder.py` | `model.use_film` |
+| C. FiLM: h' = (1 + gamma) h + beta; rows without context are left unchanged | `film.py` | `model.use_film` |
+| D. Label attention: one query per label, started from its description (`configs/specialists.yaml`, or the label name for benchmarks) | `label_attention.py` | `model.use_label_attention` |
+| E. Co-activation: z' = z + A sigmoid(z), A from scaled train PMI, zero diagonal, L2 penalty | `coactivation.py` | `model.use_coactivation` (multi-label only) |
+| F. Heads: team and lead logits; mean pooling and linear heads when D is off | `heads.py` | follows D |
+
+`advisor.py` builds the model from config. `multilabel` mode (StackSample, MixATIS, MixSNIPS) uses a sigmoid
+per label; `singlelabel` mode (CLINC150, NLBSE) uses a softmax and the lead is the label. `explain()` returns
+each label's attention weights over the tokens.
+
+Losses: focal BCE for the team (`loss.focal_gamma`), cross-entropy for the lead on rows that have one,
+cross-entropy for single-label data, and a multi-label supervised contrastive loss with Jaccard-weighted
+positives on the mean-pooled sentence vector (`loss.contrastive_temperature`). `MultiTaskLoss` adds them with
+the config weights plus the co-activation penalty.
+
+Ablation configs in `configs/experiments/`: `full`, `plain` (all four parts off: the plain MiniLM
+classifier, also used as a baseline), `no_film`, `no_label_attention`, `no_coactivation`, `no_contrastive`.
 
 ## Configs
 

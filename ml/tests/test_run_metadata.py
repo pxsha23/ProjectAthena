@@ -14,7 +14,7 @@ def test_file_hash_matches_hashlib(fixtures_dir: Path) -> None:
 
 
 def test_run_record_has_everything_needed_to_repeat_the_run(fixtures_dir: Path, results_dir: str) -> None:
-    config = load_config("configs/experiments/ablation_no_film.yaml", [f"results_dir={results_dir}"])
+    config = load_config("configs/experiments/no_film.yaml", [f"results_dir={results_dir}"])
     folder = fixtures_dir / "stacksample_tiny"
     data = [folder / "Questions.csv", folder / "Tags.csv"]
 

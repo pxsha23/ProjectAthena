@@ -1,0 +1,6 @@
+# Ablation: mean pooling and linear heads instead of label-wise attention.
+extends: ../base.yaml
+experiment: ablations
+condition: no_label_attention
+model:
+  use_label_attention: false

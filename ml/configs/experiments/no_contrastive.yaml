@@ -1,0 +1,6 @@
+# Ablation: no supervised contrastive loss.
+extends: ../base.yaml
+experiment: ablations
+condition: no_contrastive
+loss:
+  use_contrastive: false

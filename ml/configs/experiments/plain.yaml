@@ -1,0 +1,11 @@
+# The plain MiniLM classifier: FiLM, label attention, co-activation and the contrastive loss all off.
+# Mean pooling and two linear heads on the fine-tuned encoder. Also used as a baseline.
+extends: ../base.yaml
+experiment: ablations
+condition: plain
+model:
+  use_film: false
+  use_label_attention: false
+  use_coactivation: false
+loss:
+  use_contrastive: false

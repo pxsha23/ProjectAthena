@@ -1,0 +1,24 @@
+# One plain-English description per specialist. The model encodes each description once and uses the
+# mean-pooled embedding as that specialist's starting attention query, so each query begins by looking for
+# words related to its job instead of starting from random numbers.
+# Benchmark labels have no file like this: their descriptions are made from the label names
+# (atis_flight -> "flight", PlayMusic -> "play music").
+
+blueprint: >-
+  Planning how the app is built before writing code: system architecture, design patterns, database
+  schema and data models, choosing frameworks and libraries, REST and API design, microservices and
+  how the system will scale.
+code: >-
+  Writing and fixing program code: language features, frameworks and libraries, functions and classes,
+  runtime errors and exceptions, wrong output, and debugging a program that does not behave as expected.
+checker: >-
+  Problems a static check finds before the program runs: missing or conflicting dependencies, package
+  managers and manifest files such as package.json and requirements.txt, imports that cannot be
+  resolved, linter warnings, syntax errors and compiler errors.
+deploy: >-
+  Putting the app online and keeping it running: Docker and containers, web servers such as nginx,
+  cloud hosting, continuous integration and delivery pipelines, environment variables, ports, domains
+  and HTTPS certificates.
+eva: >-
+  Checking that the app works and is easy to use: unit, integration and end-to-end tests, test
+  frameworks and mocking, test coverage, usability and accessibility from the user's point of view.

@@ -1,4 +1,4 @@
-# Ablation: the same model without FiLM context gating.
+# Ablation: the full model without FiLM context gating.
 extends: ../base.yaml
 experiment: ablations
 condition: no_film

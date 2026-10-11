@@ -24,6 +24,8 @@ data:
 model:
   encoder: sentence-transformers/all-MiniLM-L6-v2
   specialists: [blueprint, code, checker, deploy, eva]
+  specialists_file: configs/specialists.yaml
+  dropout: 0.1
   context_hidden: 64
   use_film: true
   use_label_attention: true

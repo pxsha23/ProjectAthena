@@ -48,6 +48,9 @@ class DataConfig:
 class ModelConfig:
     encoder: str = "sentence-transformers/all-MiniLM-L6-v2"
     specialists: list[str] = field(default_factory=lambda: list(SPECIALISTS))
+    # Plain-English description per specialist, used to initialise the label-attention queries.
+    specialists_file: str = "configs/specialists.yaml"
+    dropout: float = 0.1
     context_hidden: int = 64
     # Each component can be switched off for the ablation study.
     use_film: bool = True
