@@ -1,0 +1,16 @@
+# Baselines on StackSample. prior, keyword and tfidf_lr do not depend on the seed, so one seed is enough;
+# setfit trains a neural model, so it gets 5 seeds like the Advisor.
+name: baselines
+jobs:
+  - baseline: prior
+    datasets: [stacksample]
+    seeds: [0]
+  - baseline: keyword
+    datasets: [stacksample]
+    seeds: [0]
+  - baseline: tfidf_lr
+    datasets: [stacksample]
+    seeds: [0]
+  - baseline: setfit
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]

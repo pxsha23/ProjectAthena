@@ -1,0 +1,18 @@
+# Each component switched off in turn, on StackSample, 5 seeds each. The full model is in main.yaml.
+name: ablations
+jobs:
+  - train: configs/experiments/plain.yaml
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]
+  - train: configs/experiments/no_film.yaml
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]
+  - train: configs/experiments/no_label_attention.yaml
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]
+  - train: configs/experiments/no_coactivation.yaml
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]
+  - train: configs/experiments/no_contrastive.yaml
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]

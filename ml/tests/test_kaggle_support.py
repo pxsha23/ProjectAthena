@@ -17,9 +17,6 @@ from athena_advisor.data.summary import summarize
 from athena_advisor.environment import REQUIRED_MODULES, environment_report, missing_modules
 from athena_advisor.paths import ml_root
 
-NOTEBOOK = ml_root() / "notebooks" / "01_prepare_data.ipynb"
-
-
 # ---------------------------------------------------------------- locating the dataset
 
 
@@ -90,38 +87,58 @@ def test_build_script_finds_the_input_folder(fixtures_dir: Path, tmp_path: Path)
     assert (tmp_path / "out" / "DATA_CARD.md").is_file()
 
 
-# ---------------------------------------------------------------- the notebook
+# ---------------------------------------------------------------- the notebooks
+
+NOTEBOOKS = sorted((ml_root() / "notebooks").glob("*.ipynb"))
+# Scripts each notebook must call (the training notebooks all follow the same steps).
+REQUIRED = {
+    "01_prepare_data": {
+        "build_stacksample.py",
+        "download_benchmarks.py",
+        "check_environment.py",
+        "summarize_data.py",
+    },
+    "02_train_main": {"kaggle_restore.py", "sweep.py", "results_table.py", "pack_results.py"},
+    "03_ablations": {"kaggle_restore.py", "sweep.py", "results_table.py", "pack_results.py"},
+    "04_baselines": {"kaggle_restore.py", "sweep.py", "results_table.py", "pack_results.py"},
+    "05_benchmarks": {"kaggle_restore.py", "sweep.py", "results_table.py", "pack_results.py"},
+}
 
 
-def code_cells() -> list[str]:
-    notebook = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
+def code_cells(path: Path) -> list[str]:
+    notebook = json.loads(path.read_text(encoding="utf-8"))
     assert notebook["nbformat"] == 4
     cells = [c for c in notebook["cells"] if c["cell_type"] == "code"]
     assert all(c["outputs"] == [] and c["execution_count"] is None for c in cells), "save without outputs"
     return ["".join(c["source"]) for c in cells]
 
 
-def test_notebook_only_calls_scripts_that_exist() -> None:
-    called = {m for source in code_cells() for m in re.findall(r"scripts/(\w+\.py)", source)}
-    assert {
-        "build_stacksample.py",
-        "download_benchmarks.py",
-        "check_environment.py",
-        "summarize_data.py",
-    } <= called
+def test_every_notebook_is_covered() -> None:
+    assert {p.stem for p in NOTEBOOKS} == set(REQUIRED)
+
+
+@pytest.mark.parametrize("path", NOTEBOOKS, ids=lambda p: p.stem)
+def test_notebook_only_calls_scripts_and_configs_that_exist(path: Path) -> None:
+    sources = code_cells(path)
+    called = {m for source in sources for m in re.findall(r"scripts/(\w+\.py)", source)}
+    assert REQUIRED[path.stem] <= called
     for script in called:
         assert (ml_root() / "scripts" / script).is_file(), script
+    for config in {m for source in sources for m in re.findall(r"(configs/[\w/]+\.yaml)", source)}:
+        assert (ml_root() / config).is_file(), config
 
 
-def test_notebook_python_compiles() -> None:
-    for source in code_cells():
+@pytest.mark.parametrize("path", NOTEBOOKS, ids=lambda p: p.stem)
+def test_notebook_python_compiles(path: Path) -> None:
+    for source in code_cells(path):
         # Shell (!) and magic (%) lines are IPython, not Python.
         python = "\n".join(line for line in source.splitlines() if not line.lstrip().startswith(("!", "%")))
-        compile(python, "<notebook cell>", "exec")
+        compile(python, f"<{path.stem} cell>", "exec")
 
 
-def test_notebook_never_prints_the_token() -> None:
-    joined = "\n".join(code_cells())
+@pytest.mark.parametrize("path", NOTEBOOKS, ids=lambda p: p.stem)
+def test_notebook_never_prints_the_token(path: Path) -> None:
+    joined = "\n".join(code_cells(path))
     assert "GITHUB_TOKEN" in joined and "capture_output=True" in joined
     assert not re.search(r"print\([^)]*token", joined)
     assert 'remote", "set-url"' in joined  # the token is removed from the saved remote

@@ -1,0 +1,12 @@
+# The full model and the plain classifier on the public benchmarks, 5 seeds each, plus TF-IDF.
+name: benchmarks
+jobs:
+  - train: configs/experiments/full.yaml
+    datasets: [mixatis, mixsnips, clinc150, nlbse]
+    seeds: [0, 1, 2, 3, 4]
+  - train: configs/experiments/plain.yaml
+    datasets: [mixatis, mixsnips, clinc150, nlbse]
+    seeds: [0, 1, 2, 3, 4]
+  - baseline: tfidf_lr
+    datasets: [mixatis, mixsnips, clinc150, nlbse]
+    seeds: [0]

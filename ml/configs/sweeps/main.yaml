@@ -1,0 +1,6 @@
+# The full Advisor model on StackSample, 5 seeds.
+name: main
+jobs:
+  - train: configs/experiments/full.yaml
+    datasets: [stacksample]
+    seeds: [0, 1, 2, 3, 4]

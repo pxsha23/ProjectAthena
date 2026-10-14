@@ -172,6 +172,47 @@ Outputs: checkpoints and the log in `results/runs/<experiment>/<condition>/<data
 are not committed), predictions in `results/predictions/advisor_<condition>/<dataset>/<split>/<seed>.npz`, the
 run record in `results/<experiment>_<dataset>/<condition>/<seed>.json`.
 
+## Training on Kaggle
+
+Four notebooks run the sweeps in `configs/sweeps/`. Each job that already has a run record is skipped, and no
+new job starts after 11 hours, so every notebook fits Kaggle's 12-hour limit and can simply be run again to
+continue.
+
+| Notebook | Sweep | Jobs |
+| --- | --- | --- |
+| `02_train_main.ipynb` | `main.yaml`: full model on StackSample, 5 seeds | 5 |
+| `03_ablations.ipynb` | `ablations.yaml`: plain, no_film, no_label_attention, no_coactivation, no_contrastive, 5 seeds each | 25 |
+| `04_baselines.ipynb` | `baselines.yaml`: prior, keyword, tfidf_lr (seed 0) and setfit (5 seeds) | 8 |
+| `05_benchmarks.ipynb` | `benchmarks.yaml`: full and plain on MixATIS, MixSNIPS, CLINC150, NLBSE (5 seeds each) plus tfidf_lr | 44 |
+
+**Once: save notebook 01's output** so other notebooks can use it.
+
+1. Open notebook 01 on kaggle.com (see "How to run on Kaggle" above) and click **Save Version** (top right).
+2. Choose **Save & Run All (Commit)** and click **Save**. Kaggle runs it in the background.
+3. When the version finishes, its **Output** tab shows `athena_data.zip`.
+
+**For each training notebook (02 to 05):**
+
+1. On kaggle.com, click **Create**, then **New Notebook**.
+2. Click **File**, then **Import Notebook**, and upload the notebook from `ml/notebooks/`.
+3. In the right-hand panel, open **Session options**:
+   - **Accelerator:** choose **GPU T4 x2** (or **GPU P100**).
+   - **Internet:** switch on.
+4. In the right-hand panel, under **Input**, click **Add Input**. Choose **Your Work**, find the notebook you
+   saved in step "Once" (notebook 01), and click the plus button (**Add**). Its `athena_data.zip` now appears
+   under `/kaggle/input/`.
+5. Click **Save Version**, choose **Save & Run All (Commit)**, and click **Save**. The notebook runs in the
+   background, so you can close the browser.
+6. When it finishes, open the version's **Output** tab: it holds `athena_results_<sweep>.zip` (run records,
+   predictions and training logs; no checkpoints).
+
+**If a sweep did not finish** (the log ends with "time budget used up"): open the same notebook, click
+**Add Input** again, and also add **this notebook's own latest output**. Then **Save Version** again. The
+earlier results are restored first, so finished jobs are skipped and the sweep continues.
+
+**Collecting everything:** download each `athena_results_*.zip`, unzip them inside `ml/` (they merge into
+`results/`), then run `python -m uv run python scripts/results_table.py` and commit the `results/` files.
+
 ## Configs
 
 - Loading is strict: an unknown key or a wrong type stops the run with a clear message, so a typo can never
