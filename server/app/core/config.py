@@ -6,6 +6,8 @@ from typing import Annotated, Literal
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, NoDecode, SettingsConfigDict
 
+from app.core.database_url import normalise_url
+
 ProviderName = Literal["api", "local", "groq", "fake"]
 AgentName = Literal["idea", "stack", "code", "summary", "eva", "chat"]
 
@@ -22,6 +24,9 @@ class Settings(BaseSettings):
 
     # --- Database ---
     database_url: str = "postgresql+asyncpg://athena:athena@localhost:5433/athena"
+    # Optional direct (unpooled) URL for Alembic migrations. Neon's pooled URL runs PgBouncer, which can break
+    # migrations; when this is set, migrations use it and the app keeps using DATABASE_URL.
+    database_url_direct: str | None = None
     database_echo: bool = False
 
     # --- Auth ---
@@ -90,14 +95,17 @@ class Settings(BaseSettings):
     embeddings_model: str | None = None
     embedding_dim: int = 384
 
-    @field_validator("database_url")
+    @field_validator("database_url", "database_url_direct")
     @classmethod
-    def use_async_driver(cls, value: str) -> str:
-        # Hosts such as Render hand out plain postgres:// URLs; the app needs the asyncpg driver.
-        for prefix in ("postgres://", "postgresql://"):
-            if value.startswith(prefix):
-                return "postgresql+asyncpg://" + value[len(prefix) :]
-        return value
+    def use_async_driver(cls, value: str | None) -> str | None:
+        # Hosts such as Render and Neon hand out plain postgres:// URLs; the app needs the asyncpg driver.
+        # Query parameters (sslmode and so on) are kept here and translated in app.core.database_url.
+        return normalise_url(value) if value else None
+
+    @property
+    def migration_url(self) -> str:
+        """The URL Alembic connects to: the direct URL when set, otherwise DATABASE_URL."""
+        return self.database_url_direct or self.database_url
 
     @field_validator("cors_origins", mode="before")
     @classmethod

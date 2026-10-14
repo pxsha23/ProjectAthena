@@ -8,7 +8,9 @@ services:
     region: singapore
     rootDir: server
     buildCommand: pip install uv && uv sync --frozen --no-dev
-    startCommand: uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    # Migrations use DATABASE_URL_DIRECT when it is set (Neon's direct, unpooled URL); the app always uses
+    # DATABASE_URL (Neon's pooled URL).
+    startCommand: DATABASE_URL="${DATABASE_URL_DIRECT:-$DATABASE_URL}" uv run alembic upgrade head && uv run uvicorn app.main:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
@@ -21,6 +23,8 @@ services:
         fromDatabase:
           name: athena-db
           property: connectionString
+      # On Neon: set DATABASE_URL to the pooled URL and DATABASE_URL_DIRECT to the direct URL (both with
+      # ?sslmode=require) in the dashboard. DATABASE_URL_DIRECT is optional and only used for migrations.
       - key: COOKIE_SECURE
         value: "true"
       - key: FRONTEND_URL

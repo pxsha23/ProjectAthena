@@ -1,13 +1,17 @@
-"""Alembic environment: async engine, URL from app settings."""
+"""Alembic environment: async engine, URL from app settings.
+
+Migrations connect to DATABASE_URL_DIRECT when it is set (Neon's direct, unpooled endpoint), otherwise to
+DATABASE_URL. An explicit sqlalchemy.url in alembic.ini or on the command line wins over both.
+"""
 
 import asyncio
 
 from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import create_async_engine
 
 from alembic import context
 from app import models  # noqa: F401  (registers tables on Base.metadata)
 from app.core.config import get_settings
+from app.core.database_url import engine_target, make_engine
 from app.core.db import Base
 
 config = context.config
@@ -15,13 +19,13 @@ target_metadata = Base.metadata
 
 
 def database_url() -> str:
-    return config.get_main_option("sqlalchemy.url") or get_settings().database_url
+    return config.get_main_option("sqlalchemy.url") or get_settings().migration_url
 
 
 def run_migrations_offline() -> None:
     """Emit SQL to stdout instead of connecting (alembic upgrade head --sql)."""
     context.configure(
-        url=database_url(),
+        url=engine_target(database_url()).url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -37,7 +41,7 @@ def do_run_migrations(connection: Connection) -> None:
 
 
 async def run_migrations_online() -> None:
-    engine = create_async_engine(database_url())
+    engine = make_engine(database_url())
     async with engine.connect() as connection:
         await connection.run_sync(do_run_migrations)
     await engine.dispose()
