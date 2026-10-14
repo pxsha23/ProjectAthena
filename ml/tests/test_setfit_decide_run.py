@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from athena_advisor.baselines.run import load_dataset, run_baseline
+from athena_advisor.baselines.run import run_baseline
 from athena_advisor.baselines.setfit_baseline import SetFitBaseline, has_contrastive_pairs, stratified_sample
 from athena_advisor.config import load_config
 from athena_advisor.data.benchmarks import build_benchmarks
@@ -16,6 +16,7 @@ from athena_advisor.data.build import build
 from athena_advisor.decide.simple import call_all, top1
 from athena_advisor.eval.data import LabelledSplit, load_split
 from athena_advisor.eval.predictions import Predictions
+from athena_advisor.eval.splits import load_dataset
 from athena_advisor.paths import ml_root
 
 FIXTURES = Path(__file__).parent / "fixtures"

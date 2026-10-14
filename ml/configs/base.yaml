@@ -50,6 +50,10 @@ train:
   warmup_ratio: 0.1
   device: auto
   deterministic: false
+  # Training stops when validation macro F1 has not improved for this many epochs.
+  early_stopping_patience: 2
+  max_grad_norm: 1.0
+  eval_batch_size: 64
 
 decision:
   use_temperature_scaling: true

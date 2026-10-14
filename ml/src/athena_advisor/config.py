@@ -83,6 +83,10 @@ class TrainConfig:
     device: str = "auto"
     # Slower but bit-for-bit repeatable GPU runs.
     deterministic: bool = False
+    # Stop when validation macro F1 has not improved for this many epochs.
+    early_stopping_patience: int = 2
+    max_grad_norm: float = 1.0
+    eval_batch_size: int = 64
 
 
 @dataclass

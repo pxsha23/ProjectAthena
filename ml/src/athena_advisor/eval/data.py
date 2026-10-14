@@ -24,6 +24,7 @@ class LabelledSplit:
     team: np.ndarray
     lead: np.ndarray
     out_of_scope: np.ndarray
+    context: np.ndarray | None = None
 
     def __len__(self) -> int:
         return len(self.ids)
@@ -51,6 +52,11 @@ def from_frame(frame: pd.DataFrame, labels: tuple[str, ...] | list[str]) -> Labe
         if "out_of_scope" in frame.columns
         else np.zeros(len(frame), bool)
     )
+    context = (
+        np.stack(frame["context"].to_numpy()).astype(np.float32)
+        if "context" in frame.columns and len(frame)
+        else None
+    )
     return LabelledSplit(
         ids=frame["id"].astype(str).to_numpy(),
         texts=frame["text"].tolist(),
@@ -58,6 +64,20 @@ def from_frame(frame: pd.DataFrame, labels: tuple[str, ...] | list[str]) -> Labe
         team=team,
         lead=lead,
         out_of_scope=out_of_scope,
+        context=context,
+    )
+
+
+def subset(split: LabelledSplit, rows: np.ndarray) -> LabelledSplit:
+    """The same split restricted to the given row indices (in that order)."""
+    return LabelledSplit(
+        ids=split.ids[rows],
+        texts=[split.texts[i] for i in rows],
+        labels=split.labels,
+        team=split.team[rows],
+        lead=split.lead[rows],
+        out_of_scope=split.out_of_scope[rows],
+        context=split.context[rows] if split.context is not None else None,
     )
 
 

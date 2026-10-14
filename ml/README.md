@@ -152,6 +152,26 @@ the config weights plus the co-activation penalty.
 Ablation configs in `configs/experiments/`: `full`, `plain` (all four parts off: the plain MiniLM
 classifier, also used as a baseline), `no_film`, `no_label_attention`, `no_coactivation`, `no_contrastive`.
 
+## Training (`src/athena_advisor/train/`)
+
+```bash
+python scripts/train.py --config configs/experiments/full.yaml --dataset stacksample --seed 0
+```
+
+- `train/data.py`: per-batch tokenisation (`data.max_length`), StackSample context vectors, the null context
+  for benchmarks, team and lead targets.
+- `train/trainer.py`: AdamW with separate learning rates for the encoder and the new layers, linear warmup and
+  decay, mixed precision on GPU, gradient clipping, early stopping on val_tune macro F1, `last.pt` every
+  epoch and `best.pt` for the best epoch, and a per-epoch `train_log.csv`. After training it loads the best
+  checkpoint and writes predictions for val_tune, val_cal and test plus a run record with metrics.
+- Interrupted? Run the same command again: it resumes from `last.pt` (model, optimizer, scheduler, scaler,
+  early-stopping state and random generators), and the result matches an uninterrupted run. On Kaggle,
+  `--stop-after N` ends a session after N epochs so a long run can be split across sessions.
+
+Outputs: checkpoints and the log in `results/runs/<experiment>/<condition>/<dataset>/seed_<n>/` (checkpoints
+are not committed), predictions in `results/predictions/advisor_<condition>/<dataset>/<split>/<seed>.npz`, the
+run record in `results/<experiment>_<dataset>/<condition>/<seed>.json`.
+
 ## Configs
 
 - Loading is strict: an unknown key or a wrong type stops the run with a clear message, so a typo can never

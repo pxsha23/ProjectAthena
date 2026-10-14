@@ -9,8 +9,9 @@ Runs every seed in train.seeds unless --seed is given. Finished runs are skipped
 import argparse
 
 from athena_advisor.baselines import BASELINES
-from athena_advisor.baselines.run import DATASETS, run_baseline
+from athena_advisor.baselines.run import run_baseline
 from athena_advisor.config import ConfigError, load_config
+from athena_advisor.eval.splits import DATASETS
 
 
 def main() -> int:

@@ -16,22 +16,16 @@ import json
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 
-import numpy as np
-
 from athena_advisor.baselines import BASELINES, Baseline, NotApplicable
 from athena_advisor.baselines.keyword import KeywordBaseline
 from athena_advisor.baselines.setfit_baseline import SetFitBaseline
 from athena_advisor.baselines.tfidf_lr import TfidfLogisticBaseline
 from athena_advisor.config import AdvisorConfig
-from athena_advisor.eval.data import LabelledSplit, load_split
 from athena_advisor.eval.predictions import Predictions, predictions_path
 from athena_advisor.eval.report import dataset_metrics
-from athena_advisor.paths import resolve
+from athena_advisor.eval.splits import EVAL_SPLITS, dataset_folder, load_dataset
 from athena_advisor.run_metadata import result_path, write_run_record
 from athena_advisor.seed import set_seed
-
-DATASETS = ("stacksample", "mixatis", "mixsnips", "clinc150", "nlbse")
-EVAL_SPLITS = ("val_tune", "val_cal", "test")
 
 
 @dataclass
@@ -59,44 +53,6 @@ def make_baseline(name: str, config: AdvisorConfig) -> Baseline:
     if name in BASELINES:
         return BASELINES[name]()
     raise ValueError(f"Unknown baseline {name!r}; choose from {sorted(BASELINES)}")
-
-
-def dataset_folder(config: AdvisorConfig, dataset: str) -> Path:
-    if dataset == "stacksample":
-        return resolve(config.data.processed_dir) / "stacksample"
-    if dataset in DATASETS:
-        return resolve(config.benchmarks.processed_dir) / dataset
-    raise ValueError(f"Unknown dataset {dataset!r}; choose from {DATASETS}")
-
-
-def load_dataset(config: AdvisorConfig, dataset: str) -> dict[str, LabelledSplit]:
-    folder = dataset_folder(config, dataset)
-    if not (folder / "train.parquet").is_file():
-        raise FileNotFoundError(f"{folder} has no train.parquet: build the data first")
-    train = load_split(folder, "train")
-    splits = {"train": train}
-    if dataset == "stacksample":
-        for split in EVAL_SPLITS:
-            splits[split] = load_split(folder, split, train.labels)
-        return splits
-    dev = load_split(folder, "dev", train.labels)
-    order = np.random.default_rng(config.benchmarks.seed).permutation(len(dev))
-    half = len(dev) // 2
-    splits["val_tune"] = _subset(dev, np.sort(order[:half]))
-    splits["val_cal"] = _subset(dev, np.sort(order[half:]))
-    splits["test"] = load_split(folder, "test", train.labels)
-    return splits
-
-
-def _subset(split: LabelledSplit, rows: np.ndarray) -> LabelledSplit:
-    return LabelledSplit(
-        ids=split.ids[rows],
-        texts=[split.texts[i] for i in rows],
-        labels=split.labels,
-        team=split.team[rows],
-        lead=split.lead[rows],
-        out_of_scope=split.out_of_scope[rows],
-    )
 
 
 def run_baseline(
