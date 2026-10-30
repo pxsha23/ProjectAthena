@@ -39,37 +39,27 @@ API docs: http://localhost:8000/docs. The frontend dev server (`client/`, `npm r
 Set every `AGENT_*_PROVIDER=fake` in `.env`. Agents then return built-in sample output, so the whole
 pipeline works for demos and frontend development. Set `EMBEDDINGS_BACKEND=hash` to skip PyTorch too.
 
-## Moving to Neon
+## Database on Neon
 
-Render's free database expires after 30 days; Neon's free plan does not. Moving takes about 15 minutes.
+The live backend uses a Neon Postgres database. Neon gives two connection strings (dashboard, **Connect**):
+the **pooled** one (host contains `-pooler`) and the **direct** one (pooling off). Keep the
+`?sslmode=require&channel_binding=require` ending as it is.
 
-1. **Create the database.** On neon.tech, create a project in a region close to Render (for Singapore:
-   AWS Asia Pacific, Singapore). On the dashboard, click **Connect** and copy two connection strings:
-   the **pooled** one (host contains `-pooler`) and the **direct** one (turn pooling off). Both end in
-   `?sslmode=require&channel_binding=require`; keep that as it is.
-2. **Create the tables on Neon** from `server/` on your laptop:
-   ```bash
-   DATABASE_URL="<Neon direct URL>" python -m uv run alembic upgrade head
-   ```
-   Migration 0001 enables the `vector` extension itself.
-3. **Stop writes on the old database.** In Render, open the service and click **Suspend** (so nobody adds
-   data during the copy). Copy the old database's **External Database URL** and add `?sslmode=require`.
-4. **Check, then copy** (URLs come from the environment so they stay out of shell history; nothing prints them):
-   ```bash
-   export SOURCE_DATABASE_URL="<Render external URL>?sslmode=require"
-   export TARGET_DATABASE_URL="<Neon direct URL>"
-   python -m uv run python scripts/copy_db.py --dry-run   # row counts per table, copies nothing
-   python -m uv run python scripts/copy_db.py             # copies in foreign-key order, then resets sequences
-   ```
-   The copy refuses a target that already has rows, runs in one transaction, and checks the counts at the end.
-5. **Switch Render to Neon.** In the service's **Environment** tab set `DATABASE_URL` to the Neon pooled URL
-   and add `DATABASE_URL_DIRECT` with the Neon direct URL. Save, then **Resume** the service. The start
-   command runs migrations through `DATABASE_URL_DIRECT`, and the app uses the pooled URL.
-6. **Check the site,** then delete the old Render database.
+- `DATABASE_URL` = pooled URL. The app uses it for every request.
+- `DATABASE_URL_DIRECT` = direct URL. Only Alembic uses it (PgBouncer can break migrations); without it,
+  migrations fall back to `DATABASE_URL`.
 
-How the URL is handled: `app/core/database_url.py` moves `sslmode` into asyncpg's `ssl` argument, drops
-`channel_binding`, and turns off statement caching for Neon's pooled (PgBouncer) endpoint. Local URLs on
-port 5433 are unchanged.
+On Render, set both in the service's **Environment** tab. The start command runs
+`alembic upgrade head` through the direct URL before starting the app. To migrate by hand from `server/`:
+
+```bash
+DATABASE_URL_DIRECT="<Neon direct URL>" python -m uv run alembic upgrade head
+```
+
+Migration 0001 enables the `vector` extension itself. `app/core/database_url.py` moves `sslmode` into
+asyncpg's `ssl` argument, drops `channel_binding`, and turns off statement caching on the pooled endpoint.
+Local URLs on port 5433 are unchanged. `scripts/copy_db.py` copies data from another Postgres database
+into an empty one if that is ever needed (`--dry-run` shows row counts only).
 
 ## Tests
 
