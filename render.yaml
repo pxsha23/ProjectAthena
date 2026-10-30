@@ -1,4 +1,4 @@
-# Render Blueprint: the Athena API (FastAPI) and its PostgreSQL database, both on the free plan.
+# Render Blueprint: the Athena API (FastAPI) on the free plan. The PostgreSQL database is hosted on Neon.
 # Render dashboard -> New -> Blueprint -> pick this repository. Values marked sync: false are asked for there.
 services:
   - type: web
@@ -19,12 +19,12 @@ services:
         value: production
       - key: SECRET_KEY
         generateValue: true
+      # The database is on Neon. Set DATABASE_URL to the pooled URL and DATABASE_URL_DIRECT to the direct URL
+      # (both with ?sslmode=require) in the dashboard. DATABASE_URL_DIRECT is only used for migrations.
       - key: DATABASE_URL
-        fromDatabase:
-          name: athena-db
-          property: connectionString
-      # On Neon: set DATABASE_URL to the pooled URL and DATABASE_URL_DIRECT to the direct URL (both with
-      # ?sslmode=require) in the dashboard. DATABASE_URL_DIRECT is optional and only used for migrations.
+        sync: false
+      - key: DATABASE_URL_DIRECT
+        sync: false
       - key: COOKIE_SECURE
         value: "true"
       - key: FRONTEND_URL
@@ -50,10 +50,3 @@ services:
         value: fake
       - key: AGENT_CHAT_PROVIDER
         value: fake
-
-databases:
-  - name: athena-db
-    plan: free
-    region: singapore
-    databaseName: athena
-    user: athena
